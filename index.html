@@ -763,7 +763,7 @@
     </div>
   </section>
 
-  <!-- PAYMENT MODAL (mantido igual) -->
+  <!-- PAYMENT MODAL -->
   <div class="modal" id="paymentModal">
     <div class="modal-content">
       <h2>💎 Pagamento PIX</h2>
@@ -783,6 +783,47 @@
     </div>
   </div>
 
+  <!-- MODAL DE DADOS DO CLIENTE -->
+  <div class="modal" id="customerModal">
+    <div class="modal-content">
+      <h2>🛎️ Seus Dados</h2>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">
+        Preencha ou confirme seus dados para entrega.
+      </p>
+      <form id="customerForm" onsubmit="event.preventDefault();">
+        <div style="text-align:left; margin-bottom:20px;">
+          <label style="color:var(--gold); font-size:13px; text-transform:uppercase; letter-spacing:1px;">Nome completo</label>
+          <input type="text" id="customerName" placeholder="Ex.: Maria Silva" required
+                 style="width:100%; padding:14px; margin-top:6px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:var(--text); font-size:15px;">
+        </div>
+        <div style="text-align:left; margin-bottom:20px;">
+          <label style="color:var(--gold); font-size:13px; text-transform:uppercase; letter-spacing:1px;">WhatsApp (com DDD)</label>
+          <input type="tel" id="customerPhone" placeholder="Ex.: 11987654321" required
+                 style="width:100%; padding:14px; margin-top:6px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:var(--text); font-size:15px;">
+        </div>
+        <div style="text-align:left; margin-bottom:20px;">
+          <label style="color:var(--gold); font-size:13px; text-transform:uppercase; letter-spacing:1px;">Endereço de entrega</label>
+          <div style="display:flex; gap:8px; margin-top:6px;">
+            <input type="text" id="customerStreet" placeholder="Rua" required
+                   style="flex:2; padding:14px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:var(--text); font-size:15px;">
+            <input type="text" id="customerNumber" placeholder="Nº"
+                   style="flex:1; padding:14px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:var(--text); font-size:15px;">
+          </div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <input type="text" id="customerDistrict" placeholder="Bairro" required
+                   style="flex:1; padding:14px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:var(--text); font-size:15px;">
+            <input type="text" id="customerCity" placeholder="Cidade"
+                   style="flex:1; padding:14px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:var(--text); font-size:15px;">
+          </div>
+        </div>
+      </form>
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="closeCustomerModal()">Cancelar</button>
+        <button class="modal-btn primary" id="confirmCustomerBtn">Confirmar Dados</button>
+      </div>
+    </div>
+  </div>
+  
   <!-- FOOTER -->
   <footer>
     <img src="logo.png" class="footer-logo" alt="Velari Logo">
@@ -881,9 +922,24 @@
       });
     });
 
-    /* CHECKOUT */
+    /* =====================================================
+       CHECKOUT - AGORA COM ETAPA DE CLIENTE
+    ===================================================== */
     const checkoutButtons = document.querySelectorAll('.checkout-btn');
     const paymentModal = document.getElementById('paymentModal');
+    const customerModal = document.getElementById('customerModal');
+
+    // Referências aos campos do formulário
+    const customerNameInput = document.getElementById('customerName');
+    const customerPhoneInput = document.getElementById('customerPhone');
+    const customerStreetInput = document.getElementById('customerStreet');
+    const customerNumberInput = document.getElementById('customerNumber');
+    const customerDistrictInput = document.getElementById('customerDistrict');
+    const customerCityInput = document.getElementById('customerCity');
+    const confirmCustomerBtn = document.getElementById('confirmCustomerBtn');
+
+    // Carregar dados salvos ao iniciar
+    loadCustomerData();
 
     checkoutButtons.forEach(button => {
       button.addEventListener('click', (e) => {
@@ -903,28 +959,96 @@
         const total = basePrice + extrasTotal;
         currentOrder = { itemName, basePrice, extras: extrasList, extrasTotal, total, card };
 
-        document.getElementById('paymentDetails').innerHTML = `
-          <div style="background:rgba(255,255,255,0.03); border-radius:16px; padding:20px; text-align:left; margin:20px 0;">
-            <p style="margin:8px 0;"><strong>Prato:</strong> ${itemName}</p>
-            <p style="margin:8px 0;"><strong>Preço Base:</strong> R$ ${basePrice.toFixed(2)}</p>
-            ${extrasList.map(e => `<p style="margin:8px 0;">➕ ${e.name} — R$ ${e.price.toFixed(2)}</p>`).join('')}
-            ${extrasTotal > 0 ? `<p style="margin:8px 0;"><strong>Extras:</strong> R$ ${extrasTotal.toFixed(2)}</p>` : ''}
-            <p style="margin:12px 0 0; font-size:20px; color:var(--gold); font-weight:700;">Total: R$ ${total.toFixed(2)}</p>
-          </div>
-        `;
-
-        paymentModal.classList.add('active');
-
-        document.getElementById('pixQrcodeContainer').style.display = 'block';
-        document.getElementById('whatsappBtn').disabled = true;
-        document.getElementById('paymentStatus').className = 'payment-status pending';
-        document.getElementById('paymentStatus').innerHTML = '⏳ Aguardando pagamento...';
-        document.getElementById('paymentTimer').innerHTML = '';
-        document.getElementById('woovi-container').innerHTML = '';
-
-        generateWooviPix(total);
+        // Abrir modal de cliente (não o de pagamento ainda)
+        openCustomerModal();
       });
     });
+
+    // Evento do botão "Confirmar Dados" no modal de cliente
+    confirmCustomerBtn.addEventListener('click', () => {
+      // Validação simples
+      const name = customerNameInput.value.trim();
+      const phone = customerPhoneInput.value.trim();
+      const street = customerStreetInput.value.trim();
+      const number = customerNumberInput.value.trim();
+      const district = customerDistrictInput.value.trim();
+      const city = customerCityInput.value.trim();
+
+      if (!name || !phone || !street || !number || !district) {
+        alert('Por favor, preencha todos os campos obrigatórios (exceto cidade).');
+        return;
+      }
+
+      // Salvar dados no localStorage
+      saveCustomerData(name, phone, street, number, district, city);
+
+      // Adicionar ao currentOrder
+      currentOrder.customer = { name, phone, street, number, district, city };
+
+      // Fechar modal de cliente e abrir modal de pagamento
+      customerModal.classList.remove('active');
+      openPaymentModal();
+    });
+
+    function openCustomerModal() {
+      // Preencher com dados salvos, se existirem
+      loadCustomerData();
+      customerModal.classList.add('active');
+    }
+
+    function closeCustomerModal() {
+      customerModal.classList.remove('active');
+      // Não limpa o pedido, pois pode querer voltar e ajustar
+    }
+
+    function openPaymentModal() {
+      // Montar resumo no modal de pagamento
+      document.getElementById('paymentDetails').innerHTML = `
+        <div style="background:rgba(255,255,255,0.03); border-radius:16px; padding:20px; text-align:left; margin:20px 0;">
+          <p style="margin:8px 0;"><strong>Prato:</strong> ${currentOrder.itemName}</p>
+          <p style="margin:8px 0;"><strong>Preço Base:</strong> R$ ${currentOrder.basePrice.toFixed(2)}</p>
+          ${currentOrder.extras.map(e => `<p style="margin:8px 0;">➕ ${e.name} — R$ ${e.price.toFixed(2)}</p>`).join('')}
+          ${currentOrder.extrasTotal > 0 ? `<p style="margin:8px 0;"><strong>Extras:</strong> R$ ${currentOrder.extrasTotal.toFixed(2)}</p>` : ''}
+          <p style="margin:12px 0 0; font-size:20px; color:var(--gold); font-weight:700;">Total: R$ ${currentOrder.total.toFixed(2)}</p>
+        </div>
+      `;
+
+      // Resetar estado do modal de pagamento
+      document.getElementById('pixQrcodeContainer').style.display = 'block';
+      document.getElementById('whatsappBtn').disabled = true;
+      document.getElementById('paymentStatus').className = 'payment-status pending';
+      document.getElementById('paymentStatus').innerHTML = '⏳ Aguardando pagamento...';
+      document.getElementById('paymentTimer').innerHTML = '';
+      document.getElementById('woovi-container').innerHTML = '';
+
+      paymentModal.classList.add('active');
+      generateWooviPix(currentOrder.total);
+    }
+
+    /* =====================================================
+       FUNÇÕES DE LOCAL STORAGE
+    ===================================================== */
+    function saveCustomerData(name, phone, street, number, district, city) {
+      const data = { name, phone, street, number, district, city };
+      localStorage.setItem('cocinaVelariCustomer', JSON.stringify(data));
+    }
+
+    function loadCustomerData() {
+      const saved = localStorage.getItem('cocinaVelariCustomer');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          customerNameInput.value = data.name || '';
+          customerPhoneInput.value = data.phone || '';
+          customerStreetInput.value = data.street || '';
+          customerNumberInput.value = data.number || '';
+          customerDistrictInput.value = data.district || '';
+          customerCityInput.value = data.city || '';
+        } catch (e) {
+          console.error('Erro ao carregar dados do cliente', e);
+        }
+      }
+    }
 
     /* GERAR PIX VIA WOOVI */
     function generateWooviPix(amount) {
@@ -1000,15 +1124,26 @@
       if (window.simulatedTimer) clearInterval(window.simulatedTimer);
     }
 
-    /* WHATSAPP */
+    /* WHATSAPP (COM DADOS DO CLIENTE) */
     function sendToWhatsApp() {
       if (!currentOrder) return;
-      let message = `🍽️ *PEDIDO CONFIRMADO - COCINA VELARI*%0A%0A📋 *Prato:* ${currentOrder.itemName}%0A💰 *Valor Base:* R$ ${currentOrder.basePrice.toFixed(2)}%0A`;
+      const c = currentOrder.customer || {};
+      let message = `🍽️ *PEDIDO CONFIRMADO - COCINA VELARI*%0A%0A`;
+      message += `📋 *Prato:* ${currentOrder.itemName}%0A`;
+      message += `💰 *Valor Base:* R$ ${currentOrder.basePrice.toFixed(2)}%0A`;
       if (currentOrder.extras.length > 0) {
         message += `%0A*Extras:*%0A`;
-        currentOrder.extras.forEach(extra => { message += `➕ ${extra.name} — R$ ${extra.price.toFixed(2)}%0A`; });
+        currentOrder.extras.forEach(extra => {
+          message += `➕ ${extra.name} — R$ ${extra.price.toFixed(2)}%0A`;
+        });
       }
-      message += `%0A💎 *TOTAL PAGO:* R$ ${currentOrder.total.toFixed(2)}%0A✅ *Status:* Pagamento Confirmado%0A%0A📞 Aguardando confirmação.`;
+      message += `%0A💎 *TOTAL PAGO:* R$ ${currentOrder.total.toFixed(2)}%0A`;
+      message += `✅ *Status:* Pagamento Confirmado%0A%0A`;
+      message += `👤 *Cliente:* ${c.name || 'N/I'}%0A`;
+      message += `📱 *WhatsApp:* ${c.phone || 'N/I'}%0A`;
+      message += `📍 *Entrega:* ${c.street || ''}, ${c.number || ''} - ${c.district || ''} - ${c.city || ''}%0A%0A`;
+      message += `📞 Aguardando confirmação do estabelecimento.`;
+
       window.open(`https://wa.me/5583921505963?text=${message}`, '_blank');
       closePaymentModal();
       if (currentOrder.card) {
