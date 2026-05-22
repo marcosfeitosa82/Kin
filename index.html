@@ -1052,41 +1052,40 @@
       }
     }
 /* CHAMADA PIX WOVII*/
-    
+    /* GERAR PIX VIA WOOVI (POPUP) */
     function generateWooviPix(amount) {
-  // Fallback de simulação apenas se AppID estiver vazio
-  if (WOOVI_APP_ID === 'SEU_APPID_AQUI' || WOOVI_APP_ID === '') {
-    simulatePixPayment(amount);
-    return;
-  }
-
-  const valorEmCentavos = Math.round(amount * 100);
-  const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-  currentCorrelationID = correlationID;
-
-  const timerDiv = document.getElementById('paymentTimer');
-  timerDiv.innerHTML = '⏱️ Abrindo pagamento...';
-
-  window.$openpix.push([
-    'pix',
-    {
-      value: valorEmCentavos,
-      correlationID: correlationID,
-      description: currentOrder.itemName + ' - Cocina Velari',
-      popup: true,                // ✅ abre janela popup (funciona sempre)
-      onLoad: () => {
-        timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
-      },
-      onError: (error) => {
-        console.error(error);
-        timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
-        document.getElementById('paymentStatus').className = 'payment-status rejected';
-        document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
+      // Fallback de simulação apenas se AppID estiver vazio
+      if (WOOVI_APP_ID === 'SEU_APPID_AQUI' || WOOVI_APP_ID === '') {
+        simulatePixPayment(amount);
+        return;
       }
-    }
-  ]);
-}}
 
+      const valorEmCentavos = Math.round(amount * 100);
+      const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+      currentCorrelationID = correlationID;
+
+      const timerDiv = document.getElementById('paymentTimer');
+      timerDiv.innerHTML = '⏱️ Abrindo pagamento...';
+
+      window.$openpix.push([
+        'pix',
+        {
+          value: valorEmCentavos,
+          correlationID: correlationID,
+          description: currentOrder.itemName + ' - Cocina Velari',
+          popup: true,
+          onLoad: () => {
+            timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
+          },
+          onError: (error) => {
+            console.error(error);
+            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
+            document.getElementById('paymentStatus').className = 'payment-status rejected';
+            document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
+          }
+        }
+      ]);
+    }  
     /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'openpix') {
