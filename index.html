@@ -1065,20 +1065,21 @@
       timerDiv.innerHTML = '⏱️ Gerando QR Code...';
 
       window.$openpix.push([
-  'pix',
-  {
-    value: valorEmCentavos,
-    correlationID: correlationID,
-    description: currentOrder.itemName + ' - Cocina Velari',
-    container: '#woovi-container',  // 👈 ESSA LINHA RESOLVE
-    onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
-    onError: () => {
-      timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
-      document.getElementById('paymentStatus').className = 'payment-status rejected';
-      document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
+        'pix',
+        {
+          value: valorEmCentavos,
+          correlationID: correlationID,
+          description: currentOrder.itemName + ' - Cocina Velari',
+          container: '#woovi-container',
+          onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
+          onError: () => {
+            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
+            document.getElementById('paymentStatus').className = 'payment-status rejected';
+            document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
+          }
+        }
+      ]);
     }
-  }
-]);
 
     /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
