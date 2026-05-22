@@ -837,7 +837,7 @@
   <script>
     const WOOVI_APP_ID = 'app-2TOWV7MuGtrRmU7dZNrhIWsd';
     window.$openpix = [];
-    window.$openpix.push(['config', { appID: app-2TOWV7MuGtrRmU7dZNrhIWsd }]);
+    window.$openpix.push(['config', { appID: WOOVI_APP_ID }]);
 
     let currentOrder = null;
     let currentCorrelationID = null;
@@ -1070,7 +1070,6 @@
           value: valorEmCentavos,
           correlationID: correlationID,
           description: currentOrder.itemName + ' - Cocina Velari',
-          container: '#woovi-container',
           onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
           onError: () => {
             timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
