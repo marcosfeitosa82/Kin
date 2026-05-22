@@ -830,8 +830,9 @@
     <p class="footer-text">Cocina Velari — Uma experiência gastronômica premium desenvolvida para clientes que valorizam exclusividade, sofisticação e excelência artesanal em cada detalhe cuidadosamente preparado.</p>
   </footer>
 
-  <!-- WOOVI/OPENPIX SCRIPT -->
-<script src="https://plugin.openpix.com.br/v1/openpix.js"></script>
+  <!-- WOOVI/OPENPIX SCRIPT (CORRIGIDO: removido async e parâmetro node) -->
+  <script src="https://plugin.openpix.com.br/v1/openpix.js"></script>
+
   <!-- SCRIPTS -->
   <script>
     const WOOVI_APP_ID = 'app-2TOWV7MuGtrRmU7dZNrhIWsd';
@@ -1051,69 +1052,53 @@
       }
     }
 
-    /* GERAR PIX VIA WOOVI */
-   function generateWooviPix(amount) {
-  if (!window.$openpix) {
-    console.error('OpenPix SDK não carregado');
-    return;
-  }
-
-  const valorEmCentavos = Math.round(amount * 100);
-
-  const correlationID =
-    'pedido-' +
-    Date.now() +
-    '-' +
-    Math.random().toString(36).substring(2, 9);
-
-  currentCorrelationID = correlationID;
-
-  const timerDiv = document.getElementById('paymentTimer');
-
-  timerDiv.innerHTML = '⏱️ Gerando QR Code...';
-
-  document.getElementById('woovi-container').innerHTML = '';
-
-  window.$openpix.push([
-    'charge',
-    {
-      node: '#woovi-container',
-
-      value: valorEmCentavos,
-
-      correlationID: correlationID,
-
-      description: `${currentOrder.itemName} - Cocina Velari`,
-
-      modal: false,
-
-      onLoad: () => {
-        timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
-      },
-
-      onError: (error) => {
-        console.error(error);
-
-        timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
-
-        document.getElementById('paymentStatus').className =
-          'payment-status rejected';
-
-        document.getElementById('paymentStatus').innerHTML =
-          '❌ Erro ao gerar PIX';
-      },
-
-      onChargeCreated: (charge) => {
-        console.log('Cobrança criada:', charge);
-
-        if (charge?.brCode) {
-          document.getElementById('pixCode').textContent =
-            charge.brCode;
-        }
+    /* GERAR PIX VIA WOOVI (CORRIGIDO: adicionado node e onChargeCreated) */
+    function generateWooviPix(amount) {
+      if (!window.$openpix) {
+        console.error('OpenPix SDK não carregado');
+        return;
       }
+
+      if (WOOVI_APP_ID === 'SEU_APPID_AQUI' || WOOVI_APP_ID === '') {
+        simulatePixPayment(amount);
+        return;
+      }
+
+      const valorEmCentavos = Math.round(amount * 100);
+      const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+      currentCorrelationID = correlationID;
+
+      const timerDiv = document.getElementById('paymentTimer');
+      timerDiv.innerHTML = '⏱️ Gerando QR Code...';
+
+      document.getElementById('woovi-container').innerHTML = '';
+
+      window.$openpix.push([
+        'charge',
+        {
+          node: '#woovi-container',
+          value: valorEmCentavos,
+          correlationID: correlationID,
+          description: `${currentOrder.itemName} - Cocina Velari`,
+          modal: false,
+          onLoad: () => {
+            timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
+          },
+          onError: (error) => {
+            console.error(error);
+            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
+            document.getElementById('paymentStatus').className = 'payment-status rejected';
+            document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
+          },
+          onChargeCreated: (charge) => {
+            console.log('Cobrança criada:', charge);
+            if (charge?.brCode) {
+              document.getElementById('pixCode').textContent = charge.brCode;
+            }
+          }
+        }
+      ]);
     }
-  ]);
-}
 
     /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
