@@ -831,8 +831,7 @@
   </footer>
 
   <!-- WOOVI/OPENPIX SCRIPT -->
-  <script src="https://plugin.openpix.com.br/v1/openpix.js?node=#woovi-container" async></script>
-
+<script src="https://plugin.openpix.com.br/v1/openpix.js"></script>
   <!-- SCRIPTS -->
   <script>
     const WOOVI_APP_ID = 'app-2TOWV7MuGtrRmU7dZNrhIWsd';
@@ -1053,35 +1052,68 @@
     }
 
     /* GERAR PIX VIA WOOVI */
-    function generateWooviPix(amount) {
-      if (WOOVI_APP_ID === 'SEU_APPID_AQUI' || WOOVI_APP_ID === '') {
-        simulatePixPayment(amount);
-        return;
-      }
+   function generateWooviPix(amount) {
+  if (!window.$openpix) {
+    console.error('OpenPix SDK não carregado');
+    return;
+  }
 
-      const valorEmCentavos = Math.round(amount * 100);
-      const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-      currentCorrelationID = correlationID;
+  const valorEmCentavos = Math.round(amount * 100);
 
-      const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = '⏱️ Gerando QR Code...';
+  const correlationID =
+    'pedido-' +
+    Date.now() +
+    '-' +
+    Math.random().toString(36).substring(2, 9);
 
-      window.$openpix.push([
-        'charge',
-        {
-          value: valorEmCentavos,
-          correlationID: correlationID,
-          description: currentOrder.itemName + ' - Cocina Velari',
-          modal: false,
-          onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
-          onError: () => {
-            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
-            document.getElementById('paymentStatus').className = 'payment-status rejected';
-            document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
-          }
+  currentCorrelationID = correlationID;
+
+  const timerDiv = document.getElementById('paymentTimer');
+
+  timerDiv.innerHTML = '⏱️ Gerando QR Code...';
+
+  document.getElementById('woovi-container').innerHTML = '';
+
+  window.$openpix.push([
+    'charge',
+    {
+      node: '#woovi-container',
+
+      value: valorEmCentavos,
+
+      correlationID: correlationID,
+
+      description: `${currentOrder.itemName} - Cocina Velari`,
+
+      modal: false,
+
+      onLoad: () => {
+        timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
+      },
+
+      onError: (error) => {
+        console.error(error);
+
+        timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
+
+        document.getElementById('paymentStatus').className =
+          'payment-status rejected';
+
+        document.getElementById('paymentStatus').innerHTML =
+          '❌ Erro ao gerar PIX';
+      },
+
+      onChargeCreated: (charge) => {
+        console.log('Cobrança criada:', charge);
+
+        if (charge?.brCode) {
+          document.getElementById('pixCode').textContent =
+            charge.brCode;
         }
-      ]);
-    } // 👈 Chave adicionada aqui
+      }
+    }
+  ]);
+}
 
     /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
