@@ -1050,35 +1050,62 @@
       }
     }
 
-    /* GERAR PIX VIA WOOVI */
-    function generateWooviPix(amount) {
-      if (WOOVI_APP_ID === 'SEU_APPID_AQUI') {
-        simulatePixPayment(amount);
-        return;
-      }
+    /* GERAR PIX VIA BACKEND SEGURO */
+async function generateWooviPix(amount) {
+  const timerDiv = document.getElementById('paymentTimer');
+  timerDiv.innerHTML = '⏱️ Gerando QR Code...';
 
-      const valorEmCentavos = Math.round(amount * 100);
-      const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-      currentCorrelationID = correlationID;
+  const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  currentCorrelationID = correlationID;
 
-      const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = '⏱️ Gerando QR Code...';
+  try {
+    const response = await fetch('https://fastapi-python-boilerplate-nvkwk4nhx-cocina-velari-s-projects.vercel.app/criar-pix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        total: currentOrder.total,
+        descricao: `${currentOrder.itemName} - Cocina Velari`,
+        correlationID: correlationID
+      })
+    });
 
-      window.$openpix.push([
-        'pix',
-        {
-          value: valorEmCentavos,
-          correlationID: correlationID,
-          description: currentOrder.itemName + ' - Cocina Velari',
-          onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
-          onError: () => {
-            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
-            document.getElementById('paymentStatus').className = 'payment-status rejected';
-            document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
-          }
-        }
-      ]);
+    const data = await response.json();
+
+    if (data.sucesso) {
+      // Exibe QR Code na div branca
+      document.getElementById('woovi-container').innerHTML = `
+        <img src="${data.qrCodeImage}" alt="QR Code PIX" style="width:200px; height:200px;">
+      `;
+      document.getElementById('pixCode').textContent = data.brCode;
+      timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
+      
+      // Começa a verificar se foi pago a cada 3 segundos
+      verificarStatus(data.correlationID);
+    } else {
+      throw new Error(data.erro || 'Falha na API');
     }
+  } catch (error) {
+    console.error(error);
+    timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
+    document.getElementById('paymentStatus').className = 'payment-status rejected';
+    document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
+  }
+}
+
+async function verificarStatus(correlationID) {
+  const interval = setInterval(async () => {
+    try {
+      const resp = await fetch(`https://fastapi-python-boilerplate-nvkwk4nhx-cocina-velari-s-projects.vercel.app/verificar-pix?correlationID=${correlationID}`);
+      const data = await resp.json();
+      if (data.status === 'COMPLETED') {
+        clearInterval(interval);
+        confirmPayment();
+      }
+    } catch (e) {
+      console.error('Erro na verificação:', e);
+    }
+  }, 3000);
+}
 
     /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
