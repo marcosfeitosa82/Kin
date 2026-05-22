@@ -1051,50 +1051,41 @@
         }
       }
     }
-
-    /* GERAR PIX VIA WOOVI */
+/* CHAMADA PIX WOVII*/
+    
     function generateWooviPix(amount) {
-      // AppID real — não chama simulação
-      if (WOOVI_APP_ID === 'SEU_APPID_AQUI' || WOOVI_APP_ID === '') {
-        simulatePixPayment(amount);
-        return;
+  // Fallback de simulação apenas se AppID estiver vazio
+  if (WOOVI_APP_ID === 'SEU_APPID_AQUI' || WOOVI_APP_ID === '') {
+    simulatePixPayment(amount);
+    return;
+  }
+
+  const valorEmCentavos = Math.round(amount * 100);
+  const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  currentCorrelationID = correlationID;
+
+  const timerDiv = document.getElementById('paymentTimer');
+  timerDiv.innerHTML = '⏱️ Abrindo pagamento...';
+
+  window.$openpix.push([
+    'pix',
+    {
+      value: valorEmCentavos,
+      correlationID: correlationID,
+      description: currentOrder.itemName + ' - Cocina Velari',
+      popup: true,                // ✅ abre janela popup (funciona sempre)
+      onLoad: () => {
+        timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
+      },
+      onError: (error) => {
+        console.error(error);
+        timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
+        document.getElementById('paymentStatus').className = 'payment-status rejected';
+        document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
       }
-
-      const valorEmCentavos = Math.round(amount * 100);
-      const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-      currentCorrelationID = correlationID;
-
-      const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = '⏱️ Gerando QR Code...';
-
-      document.getElementById('woovi-container').innerHTML = '';
-
-      window.$openpix.push([
-        'charge',
-        {
-          node: '#woovi-container',
-          value: valorEmCentavos,
-          correlationID: correlationID,
-          description: `${currentOrder.itemName} - Cocina Velari`,
-          modal: false,
-          onLoad: () => {
-            timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
-          },
-          onError: (error) => {
-            console.error(error);
-            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
-            document.getElementById('paymentStatus').className = 'payment-status rejected';
-            document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
-          },
-          onChargeCreated: (charge) => {
-            console.log('Cobrança criada:', charge);
-            if (charge?.brCode) {
-              document.getElementById('pixCode').textContent = charge.brCode;
-            }
-          }
-        }
-      ]);
     }
+  ]);
+}}
 
     /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
