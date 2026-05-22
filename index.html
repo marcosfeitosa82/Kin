@@ -49,9 +49,6 @@
       z-index: -1;
     }
 
-    /* =========================================================
-       BACKGROUND VIDEO
-    ========================================================= */
     .ambient-video {
       position: fixed;
       inset: 0;
@@ -221,9 +218,6 @@
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(184, 154, 95, 0.08);
     }
 
-    /* =========================================================
-       IMAGE AREA
-    ========================================================= */
     .image-wrapper {
       position: relative;
       width: 100%;
@@ -241,9 +235,6 @@
     }
     .menu-card:hover .menu-image { transform: scale(1.03); }
 
-    /* =========================================================
-       IMAGE OVERLAY
-    ========================================================= */
     .image-overlay {
       position: absolute;
       inset: auto 0 0 0;
@@ -266,9 +257,6 @@
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     }
 
-    /* =========================================================
-       MENU CONTENT
-    ========================================================= */
     .menu-content { padding: 30px; }
     .menu-top {
       display: flex;
@@ -295,9 +283,6 @@
       border: 1px solid rgba(184, 154, 95, 0.5);
     }
 
-    /* =========================================================
-       EXTRAS
-    ========================================================= */
     .extras-wrapper {
       max-height: 0;
       overflow: hidden;
@@ -332,9 +317,6 @@
     .extra-option span { flex: 1; color: var(--text); font-size: 15px; line-height: 1.5; }
     .extra-option strong { color: var(--gold); font-size: 14px; white-space: nowrap; }
 
-    /* =========================================================
-       CHECKOUT BUTTON
-    ========================================================= */
     .checkout-btn {
       width: 100%;
       padding: 16px;
@@ -354,29 +336,83 @@
     .checkout-btn.visible { display: block; }
     .checkout-btn:hover { transform: scale(1.03); box-shadow: 0 15px 35px rgba(184, 154, 95, 0.3); }
 
-      <!-- PAYMENT MODAL -->
-  <div class="modal" id="paymentModal">
-    <div class="modal-content">
-      <h2>💎 Pagamento PIX</h2>
-      <div id="paymentDetails"></div>
-      <div id="pixQrcodeContainer" style="display:none;">
-        <h3>Finalize seu pedido</h3>
-        <button class="checkout-btn visible" id="generatePixBtn" style="margin-bottom: 20px;" onclick="generateWooviPix(currentOrder.total)">
-          Pagar com PIX
-        </button>
-        <p style="color:var(--muted); font-size:13px; margin-bottom: 20px;">Ao clicar, uma janela segura do Woovi será aberta.</p>
-        <div class="payment-status pending" id="paymentStatus">⏳ Aguardando pagamento...</div>
-        <div class="payment-timer" id="paymentTimer"></div>
-      </div>
-      <div class="modal-actions">
-        <button class="modal-btn" onclick="closePaymentModal()">Cancelar</button>
-        <button class="modal-btn primary" id="whatsappBtn" disabled onclick="sendToWhatsApp()">✅ Pagamento Confirmado - Enviar Pedido</button>
-      </div>
-    </div>
-  </div>
+    /* =========================================================
+       PAYMENT MODAL
+    ========================================================= */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: linear-gradient(145deg, rgba(20, 20, 20, 0.98), rgba(10, 10, 10, 0.98));
+      border: 1px solid rgba(184, 154, 95, 0.3);
+      border-radius: 32px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 { font-family: 'Cinzel', serif; color: var(--gold); margin-bottom: 20px; font-size: clamp(22px, 4vw, 32px); }
+    .modal h3 { color: var(--text); margin: 20px 0; font-size: 18px; }
+
+    .pix-code {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 20px 0;
+      word-break: break-all;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .pix-code:hover { border-color: var(--gold); background: rgba(184, 154, 95, 0.1); }
+    .payment-status {
+      padding: 12px;
+      border-radius: 12px;
+      margin: 16px 0;
+      font-weight: 600;
+    }
+    .payment-status.pending { background: rgba(255, 193, 7, 0.15); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3); }
+    .payment-status.approved { background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); }
+    .payment-status.rejected { background: rgba(244, 67, 54, 0.15); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3); }
+    .modal-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .modal-btn {
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .modal-btn.primary {
+      background: linear-gradient(135deg, #b89a5f, #8b7340);
+      border: none;
+      color: #000;
+      font-weight: 700;
+    }
+    .modal-btn.primary:disabled { background: rgba(255, 255, 255, 0.1); color: var(--muted); }
+    .modal-btn:hover:not(:disabled) { transform: translateY(-3px); }
+    .payment-timer { color: var(--gold); font-size: 14px; margin: 12px 0; }
 
     /* =========================================================
-       PAYMENT SECTION (REDESENHADA)
+       PAYMENT SECTION
     ========================================================= */
     .payment-section {
       max-width: 980px;
@@ -431,9 +467,6 @@
       max-width: 280px;
     }
 
-    /* =========================================================
-       FOOTER & MUSIC
-    ========================================================= */
     footer { padding: 120px 20px 60px; text-align: center; }
     .footer-logo { width: 140px; opacity: 0.95; margin-bottom: 28px; }
     .footer-text { color: var(--muted); line-height: 2; max-width: 900px; margin: auto; font-size: 15px; }
@@ -453,9 +486,6 @@
     }
     .music-toggle:hover { border-color: rgba(184, 154, 95, 0.35); transform: translateY(-3px); }
 
-    /* =========================================================
-       RESPONSIVE
-    ========================================================= */
     @media (max-width: 768px) {
       section { padding: 90px 18px; }
       .hero-actions { flex-direction: column; }
@@ -478,24 +508,20 @@
 </head>
 
 <body>
-  <!-- VIDEO -->
   <video autoplay muted loop playsinline class="ambient-video">
     <source src="background.mp4" type="video/mp4">
   </video>
 
-  <!-- LOADING -->
   <div class="loading-screen" id="loadingScreen">
     <img src="logo.png" class="loading-logo" alt="Cocina Velari">
     <div class="loading-text">Preparing your gourmet experience</div>
   </div>
 
-  <!-- AUDIO -->
   <audio id="ambientMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
   </audio>
   <button class="music-toggle" id="musicToggle">♫ Lounge Atmosphere</button>
 
-  <!-- HERO -->
   <header>
     <div class="hero">
       <img src="logo.png" alt="Cocina Velari" class="floating-logo">
@@ -511,7 +537,6 @@
     </div>
   </header>
 
-  <!-- MENU -->
   <section id="menu">
     <h2 class="section-title">Signature Menu</h2>
     <p class="section-subtitle">
@@ -519,8 +544,7 @@
     </p>
 
     <div class="menu-grid">
-
-      <!-- CARD 1: Velvet Bourguignon (Carne) -->
+      <!-- CARD 1: Velvet Bourguignon -->
       <article class="menu-card reveal" data-name="Velvet Bourguignon" data-price="42">
         <div class="image-wrapper">
           <img src="prato4.png" class="menu-image" alt="Velvet Bourguignon"
@@ -551,7 +575,7 @@
         </div>
       </article>
 
-      <!-- CARD 2: Riviera Gold (Camarão) -->
+      <!-- CARD 2: Riviera Gold -->
       <article class="menu-card reveal" data-name="Riviera Gold" data-price="46">
         <div class="image-wrapper">
           <img src="prato5.png" class="menu-image" alt="Riviera Gold"
@@ -672,11 +696,10 @@
           </div>
         </div>
       </article>
-
     </div>
   </section>
 
-  <!-- PAYMENT (NOVO DESIGN) -->
+  <!-- PAYMENT SECTION -->
   <section>
     <div class="payment-section reveal">
       <h2 class="section-title">Pagamento Exclusivo</h2>
@@ -706,11 +729,12 @@
     <div class="modal-content">
       <h2>💎 Pagamento PIX</h2>
       <div id="paymentDetails"></div>
-      <div id="pixQrcodeContainer" style="display:none;">
-        <h3>Escaneie o QR Code</h3>
-        <div id="woovi-container"></div>
-        <p style="color:var(--muted); font-size:13px;">ou copie o código PIX:</p>
-        <div class="pix-code" id="pixCode" onclick="copyPixCode()">Gerando código PIX...</div>
+      <div id="pixQrcodeContainer" style="display:block;">
+        <h3 style="margin-bottom:16px;">Finalize seu pedido</h3>
+        <button class="checkout-btn visible" id="generatePixBtn" style="margin: 0 auto 20px; display:block; max-width:280px;" onclick="generateWooviPix(currentOrder.total)">
+          Pagar com PIX
+        </button>
+        <p style="color:var(--muted); font-size:13px; margin-bottom: 20px;">Ao clicar, uma janela segura do Woovi será aberta.</p>
         <div class="payment-status pending" id="paymentStatus">⏳ Aguardando pagamento...</div>
         <div class="payment-timer" id="paymentTimer"></div>
       </div>
@@ -721,7 +745,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE DADOS DO CLIENTE -->
+  <!-- CUSTOMER MODAL -->
   <div class="modal" id="customerModal">
     <div class="modal-content">
       <h2>🛎️ Seus Dados</h2>
@@ -762,23 +786,19 @@
     </div>
   </div>
   
-  <!-- FOOTER -->
   <footer>
     <img src="logo.png" class="footer-logo" alt="Velari Logo">
     <p class="footer-text">Cocina Velari — Uma experiência gastronômica premium desenvolvida para clientes que valorizam exclusividade, sofisticação e excelência artesanal em cada detalhe cuidadosamente preparado.</p>
   </footer>
 
-  <!-- WOOVI/OPENPIX SCRIPT -->
   <script src="https://plugin.openpix.com.br/v1/openpix.js" async></script>
 
-  <!-- SCRIPTS -->
   <script>
     const WOOVI_APP_ID = 'Q2xpZW50X0lkX2EwZDMxODJkLWQzOTMtNDA3Yy1hY2E2LTkyMDczZGQ3ZDZkZjpDbGllbnRfU2VjcmV0XzFjb1V5RHA2MVlqZWlGcHdTT3FaSTFzRnNZNHNqdTVydzE3OVNyaUtpRlk9';
     window.$openpix = [];
     window.$openpix.push(['config', { appID: WOOVI_APP_ID }]);
 
     let currentOrder = null;
-    let currentCorrelationID = null;
 
     /* LOADING */
     const loadingScreen = document.getElementById('loadingScreen');
@@ -860,14 +880,11 @@
       });
     });
 
-    /* =====================================================
-       CHECKOUT - AGORA COM ETAPA DE CLIENTE
-    ===================================================== */
+    /* CHECKOUT */
     const checkoutButtons = document.querySelectorAll('.checkout-btn');
     const paymentModal = document.getElementById('paymentModal');
     const customerModal = document.getElementById('customerModal');
 
-    // Referências aos campos do formulário
     const customerNameInput = document.getElementById('customerName');
     const customerPhoneInput = document.getElementById('customerPhone');
     const customerStreetInput = document.getElementById('customerStreet');
@@ -876,7 +893,6 @@
     const customerCityInput = document.getElementById('customerCity');
     const confirmCustomerBtn = document.getElementById('confirmCustomerBtn');
 
-    // Carregar dados salvos ao iniciar
     loadCustomerData();
 
     checkoutButtons.forEach(button => {
@@ -897,14 +913,11 @@
         const total = basePrice + extrasTotal;
         currentOrder = { itemName, basePrice, extras: extrasList, extrasTotal, total, card };
 
-        // Abrir modal de cliente (não o de pagamento ainda)
         openCustomerModal();
       });
     });
 
-    // Evento do botão "Confirmar Dados" no modal de cliente
     confirmCustomerBtn.addEventListener('click', () => {
-      // Validação simples
       const name = customerNameInput.value.trim();
       const phone = customerPhoneInput.value.trim();
       const street = customerStreetInput.value.trim();
@@ -917,30 +930,23 @@
         return;
       }
 
-      // Salvar dados no localStorage
       saveCustomerData(name, phone, street, number, district, city);
-
-      // Adicionar ao currentOrder
       currentOrder.customer = { name, phone, street, number, district, city };
 
-      // Fechar modal de cliente e abrir modal de pagamento
       customerModal.classList.remove('active');
       openPaymentModal();
     });
 
     function openCustomerModal() {
-      // Preencher com dados salvos, se existirem
       loadCustomerData();
       customerModal.classList.add('active');
     }
 
     function closeCustomerModal() {
       customerModal.classList.remove('active');
-      // Não limpa o pedido, pois pode querer voltar e ajustar
     }
 
     function openPaymentModal() {
-      // Montar resumo no modal de pagamento
       document.getElementById('paymentDetails').innerHTML = `
         <div style="background:rgba(255,255,255,0.03); border-radius:16px; padding:20px; text-align:left; margin:20px 0;">
           <p style="margin:8px 0;"><strong>Prato:</strong> ${currentOrder.itemName}</p>
@@ -951,44 +957,14 @@
         </div>
       `;
 
-      // Resetar estado do modal de pagamento
-      document.getElementById('pixQrcodeContainer').style.display = 'block';
       document.getElementById('whatsappBtn').disabled = true;
       document.getElementById('paymentStatus').className = 'payment-status pending';
       document.getElementById('paymentStatus').innerHTML = '⏳ Aguardando pagamento...';
       document.getElementById('paymentTimer').innerHTML = '';
-      document.getElementById('woovi-container').innerHTML = '';
 
       paymentModal.classList.add('active');
-      generateWooviPix(currentOrder.total);
     }
 
-    /* =====================================================
-       FUNÇÕES DE LOCAL STORAGE
-    ===================================================== */
-    function saveCustomerData(name, phone, street, number, district, city) {
-      const data = { name, phone, street, number, district, city };
-      localStorage.setItem('cocinaVelariCustomer', JSON.stringify(data));
-    }
-
-    function loadCustomerData() {
-      const saved = localStorage.getItem('cocinaVelariCustomer');
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          customerNameInput.value = data.name || '';
-          customerPhoneInput.value = data.phone || '';
-          customerStreetInput.value = data.street || '';
-          customerNumberInput.value = data.number || '';
-          customerDistrictInput.value = data.district || '';
-          customerCityInput.value = data.city || '';
-        } catch (e) {
-          console.error('Erro ao carregar dados do cliente', e);
-        }
-      }
-    }
-
-        /* GERAR PIX VIA WOOVI (POPUP) */
     function generateWooviPix(amount) {
       if (WOOVI_APP_ID === 'SEU_APPID_AQUI') {
         simulatePixPayment(amount);
@@ -997,19 +973,17 @@
 
       const valorEmCentavos = Math.round(amount * 100);
       const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-      currentCorrelationID = correlationID;
 
       const timerDiv = document.getElementById('paymentTimer');
       timerDiv.innerHTML = '⏱️ Abrindo checkout...';
 
-      // Abre em popup (experiência mais fluida)
       window.$openpix.push([
         'pix',
         {
           value: valorEmCentavos,
           correlationID: correlationID,
           description: currentOrder.itemName + ' - Cocina Velari',
-          popup: true,              // 👈 Abre em janela popup
+          popup: true,
           onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
           onError: () => {
             timerDiv.innerHTML = '❌ Erro ao gerar PIX. Tente novamente.';
@@ -1020,7 +994,6 @@
       ]);
     }
 
-    /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'openpix') {
         if (event.data.data && event.data.data.status === 'COMPLETED') confirmPayment();
@@ -1031,8 +1004,27 @@
         }
       }
     });
-    
-    /* CONFIRMAR */
+
+    function simulatePixPayment(amount) {
+      const simulatedPixCode = `00020126580014br.gov.bcb.pix0136${generateRandomKey()}5204000053039865405${amount.toFixed(2)}5802BR5925Cocina Velari Premium6009Sao Paulo62070503***6304${generateRandomKey().substring(0,4)}`;
+      document.getElementById('pixCode') && (document.getElementById('pixCode').textContent = simulatedPixCode);
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(simulatedPixCode)}`;
+      // Simulação apenas no status, sem afetar o layout
+      let secondsLeft = 5;
+      const timerDiv = document.getElementById('paymentTimer');
+      timerDiv.innerHTML = `⏱️ Simulação: ${secondsLeft}s para confirmar`;
+      const timer = setInterval(() => {
+        secondsLeft--;
+        timerDiv.innerHTML = `⏱️ Simulação: ${secondsLeft}s para confirmar`;
+        if (secondsLeft <= 0) { clearInterval(timer); confirmPayment(); }
+      }, 1000);
+      window.simulatedTimer = timer;
+    }
+
+    function generateRandomKey() {
+      return Array.from({length: 32}, () => Math.floor(Math.random() * 10)).join('');
+    }
+
     function confirmPayment() {
       document.getElementById('paymentStatus').className = 'payment-status approved';
       document.getElementById('paymentStatus').innerHTML = '✅ Pagamento aprovado!';
@@ -1042,7 +1034,6 @@
       if (window.simulatedTimer) clearInterval(window.simulatedTimer);
     }
 
-    /* WHATSAPP (COM DADOS DO CLIENTE) */
     function sendToWhatsApp() {
       if (!currentOrder) return;
       const c = currentOrder.customer || {};
@@ -1074,10 +1065,9 @@
       currentOrder = null;
     }
 
-    /* COPIAR PIX */
     function copyPixCode() {
-      const pixCode = document.getElementById('pixCode').textContent;
-      if (pixCode === 'Gerando código PIX...' || pixCode === 'Clique para copiar') return;
+      const pixCode = document.getElementById('pixCode')?.textContent;
+      if (!pixCode || pixCode === 'Gerando código PIX...' || pixCode === 'Clique para copiar') return;
       navigator.clipboard.writeText(pixCode).then(() => {
         const codeDiv = document.getElementById('pixCode');
         const originalText = codeDiv.textContent;
@@ -1087,20 +1077,36 @@
       }).catch(err => console.error(err));
     }
 
-    /* FECHAR MODAL */
     function closePaymentModal() {
       paymentModal.classList.remove('active');
       if (window.simulatedTimer) clearInterval(window.simulatedTimer);
-      document.getElementById('pixQrcodeContainer').style.display = 'none';
-      document.getElementById('whatsappBtn').disabled = true;
-      document.getElementById('woovi-container').innerHTML = '';
-      document.getElementById('pixCode').textContent = 'Clique para copiar';
-      currentOrder = null;
-      currentCorrelationID = null;
     }
 
     paymentModal.addEventListener('click', (e) => { if (e.target === paymentModal) closePaymentModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && paymentModal.classList.contains('active')) closePaymentModal(); });
+
+    /* LOCAL STORAGE */
+    function saveCustomerData(name, phone, street, number, district, city) {
+      const data = { name, phone, street, number, district, city };
+      localStorage.setItem('cocinaVelariCustomer', JSON.stringify(data));
+    }
+
+    function loadCustomerData() {
+      const saved = localStorage.getItem('cocinaVelariCustomer');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          customerNameInput.value = data.name || '';
+          customerPhoneInput.value = data.phone || '';
+          customerStreetInput.value = data.street || '';
+          customerNumberInput.value = data.number || '';
+          customerDistrictInput.value = data.district || '';
+          customerCityInput.value = data.city || '';
+        } catch (e) {
+          console.error('Erro ao carregar dados do cliente', e);
+        }
+      }
+    }
 
     /* ANIMAÇÃO PULSE */
     const style = document.createElement('style');
