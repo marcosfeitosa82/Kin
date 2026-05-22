@@ -834,19 +834,7 @@
 
   <!-- SCRIPTS -->
   <script>
-    const WOOVI_APP_ID = 'app-2TOWV7MuGtrRmU7dZNrhIWsd';
-    window.$openpix = [];
-    window.$openpix.push(['config', { appID: WOOVI_APP_ID }]);
-
-    let currentOrder = null;
-    let currentCorrelationID = null;
-
-    /* LOADING */
-    const loadingScreen = document.getElementById('loadingScreen');
-    window.addEventListener('load', () => {
-      setTimeout(() => { loadingScreen.classList.add('hidden'); }, 2600);
-    });
-
+ 
     /* SCROLL REVEAL */
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver(entries => {
@@ -1058,7 +1046,7 @@ async function generateWooviPix(amount) {
   currentCorrelationID = correlationID;
 
   try {
-    const response = await fetch('https://fastapi-python-boilerplate-nvkwk4nhx-cocina-velari-s-projects.vercel.app/criar-pix', {
+    const response = await fetch('https://fastapi-python-boilerplate-hena-rho-75.vercel.app', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1094,7 +1082,7 @@ async function generateWooviPix(amount) {
 async function verificarStatus(correlationID) {
   const interval = setInterval(async () => {
     try {
-      const resp = await fetch(`https://fastapi-python-boilerplate-nvkwk4nhx-cocina-velari-s-projects.vercel.app/verificar-pix?correlationID=${correlationID}`);
+      const resp = await fetch(`https://fastapi-python-boilerplate-hena-rho-75.vercel.app/verificar-pix?correlationID=${correlationID}`);
       const data = await resp.json();
       if (data.status === 'COMPLETED') {
         clearInterval(interval);
