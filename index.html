@@ -1092,29 +1092,7 @@
         }
       }
     });
-
-    /* SIMULAÇÃO */
-    function simulatePixPayment(amount) {
-      const simulatedPixCode = `00020126580014br.gov.bcb.pix0136${generateRandomKey()}5204000053039865405${amount.toFixed(2)}5802BR5925Cocina Velari Premium6009Sao Paulo62070503***6304${generateRandomKey().substring(0,4)}`;
-      document.getElementById('pixCode').textContent = simulatedPixCode;
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(simulatedPixCode)}`;
-      document.getElementById('woovi-container').innerHTML = `<img src="${qrUrl}" alt="QR Code PIX" style="width:200px; height:200px;">`;
-
-      let secondsLeft = 5;
-      const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = `⏱️ Simulação: ${secondsLeft}s para confirmar`;
-      const timer = setInterval(() => {
-        secondsLeft--;
-        timerDiv.innerHTML = `⏱️ Simulação: ${secondsLeft}s para confirmar`;
-        if (secondsLeft <= 0) { clearInterval(timer); confirmPayment(); }
-      }, 1000);
-      window.simulatedTimer = timer;
-    }
-
-    function generateRandomKey() {
-      return Array.from({length: 32}, () => Math.floor(Math.random() * 10)).join('');
-    }
-
+    
     /* CONFIRMAR */
     function confirmPayment() {
       document.getElementById('paymentStatus').className = 'payment-status approved';
