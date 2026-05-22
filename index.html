@@ -831,7 +831,8 @@
   </footer>
 
   <!-- WOOVI/OPENPIX SCRIPT -->
-  <script src="https://plugin.openpix.com.br/v1/openpix.js" async></script>
+  <!-- Substitua a linha atual do script por esta -->
+  <script src="https://plugin.openpix.com.br/v1/openpix.js?node=#woovi-container" async></script>
 
   <!-- SCRIPTS -->
   <script>
@@ -1069,22 +1070,21 @@
       timerDiv.innerHTML = '⏱️ Gerando QR Code...';
 
       // 👇 CORREÇÃO 2: container adicionado
-      window.$openpix.push([
-        'pix',
-        {
-          value: valorEmCentavos,
-          correlationID: correlationID,
-          description: currentOrder.itemName + ' - Cocina Velari',
-          container: '#woovi-container',  // 👈 CORREÇÃO 2
-          onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
-          onError: () => {
-            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
-            document.getElementById('paymentStatus').className = 'payment-status rejected';
-            document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
-          }
-        }
-      ]);
+    window.$openpix.push([
+  'charge',
+  {
+    value: valorEmCentavos,
+    correlationID: correlationID,
+    description: currentOrder.itemName + ' - Cocina Velari',
+    modal: false,
+    onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
+    onError: () => {
+      timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
+      document.getElementById('paymentStatus').className = 'payment-status rejected';
+      document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
     }
+  }
+]);
 
     /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
