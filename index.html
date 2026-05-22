@@ -830,7 +830,7 @@
     <p class="footer-text">Cocina Velari — Uma experiência gastronômica premium desenvolvida para clientes que valorizam exclusividade, sofisticação e excelência artesanal em cada detalhe cuidadosamente preparado.</p>
   </footer>
 
-  <!-- WOOVI/OPENPIX SCRIPT (CORRIGIDO: removido async e parâmetro node) -->
+  <!-- WOOVI/OPENPIX SCRIPT -->
   <script src="https://plugin.openpix.com.br/v1/openpix.js"></script>
 
   <!-- SCRIPTS -->
@@ -1052,13 +1052,9 @@
       }
     }
 
-    /* GERAR PIX VIA WOOVI (CORRIGIDO: adicionado node e onChargeCreated) */
+    /* GERAR PIX VIA WOOVI */
     function generateWooviPix(amount) {
-      if (!window.$openpix) {
-        console.error('OpenPix SDK não carregado');
-        return;
-      }
-
+      // AppID real — não chama simulação
       if (WOOVI_APP_ID === 'SEU_APPID_AQUI' || WOOVI_APP_ID === '') {
         simulatePixPayment(amount);
         return;
@@ -1112,7 +1108,7 @@
       }
     });
 
-    /* SIMULAÇÃO */
+    /* SIMULAÇÃO (fallback seguro) */
     function simulatePixPayment(amount) {
       const simulatedPixCode = `00020126580014br.gov.bcb.pix0136${generateRandomKey()}5204000053039865405${amount.toFixed(2)}5802BR5925Cocina Velari Premium6009Sao Paulo62070503***6304${generateRandomKey().substring(0,4)}`;
       document.getElementById('pixCode').textContent = simulatedPixCode;
