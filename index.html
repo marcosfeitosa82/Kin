@@ -49,9 +49,6 @@
       z-index: -1;
     }
 
-    /* =========================================================
-       BACKGROUND VIDEO
-    ========================================================= */
     .ambient-video {
       position: fixed;
       inset: 0;
@@ -63,9 +60,7 @@
       z-index: -2;
     }
 
-    /* =========================================================
-       LOADING
-    ========================================================= */
+    /* LOADING */
     .loading-screen {
       position: fixed;
       inset: 0;
@@ -92,9 +87,7 @@
       to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     }
 
-    /* =========================================================
-       HERO
-    ========================================================= */
+    /* HERO */
     header {
       min-height: 100vh;
       display: flex;
@@ -172,9 +165,7 @@
       background: rgba(184, 154, 95, 0.08);
     }
 
-    /* =========================================================
-       SECTION
-    ========================================================= */
+    /* SECTION */
     section { padding: 120px 20px; }
     .section-title {
       text-align: center;
@@ -192,9 +183,7 @@
       font-size: clamp(14px, 2vw, 17px);
     }
 
-    /* =========================================================
-       MENU GRID
-    ========================================================= */
+    /* MENU GRID */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -221,9 +210,6 @@
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(184, 154, 95, 0.08);
     }
 
-    /* =========================================================
-       IMAGE AREA
-    ========================================================= */
     .image-wrapper {
       position: relative;
       width: 100%;
@@ -241,9 +227,6 @@
     }
     .menu-card:hover .menu-image { transform: scale(1.03); }
 
-    /* =========================================================
-       IMAGE OVERLAY
-    ========================================================= */
     .image-overlay {
       position: absolute;
       inset: auto 0 0 0;
@@ -266,9 +249,6 @@
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     }
 
-    /* =========================================================
-       MENU CONTENT
-    ========================================================= */
     .menu-content { padding: 30px; }
     .menu-top {
       display: flex;
@@ -295,9 +275,6 @@
       border: 1px solid rgba(184, 154, 95, 0.5);
     }
 
-    /* =========================================================
-       EXTRAS
-    ========================================================= */
     .extras-wrapper {
       max-height: 0;
       overflow: hidden;
@@ -332,9 +309,6 @@
     .extra-option span { flex: 1; color: var(--text); font-size: 15px; line-height: 1.5; }
     .extra-option strong { color: var(--gold); font-size: 14px; white-space: nowrap; }
 
-    /* =========================================================
-       CHECKOUT BUTTON
-    ========================================================= */
     .checkout-btn {
       width: 100%;
       padding: 16px;
@@ -354,9 +328,7 @@
     .checkout-btn.visible { display: block; }
     .checkout-btn:hover { transform: scale(1.03); box-shadow: 0 15px 35px rgba(184, 154, 95, 0.3); }
 
-    /* =========================================================
-       PAYMENT MODAL
-    ========================================================= */
+    /* MODAL */
     .modal {
       position: fixed;
       inset: 0;
@@ -382,29 +354,6 @@
       overflow-y: auto;
     }
     .modal h2 { font-family: 'Cinzel', serif; color: var(--gold); margin-bottom: 20px; font-size: clamp(22px, 4vw, 32px); }
-    .modal h3 { color: var(--text); margin: 20px 0; font-size: 18px; }
-    #woovi-container {
-      background: white;
-      padding: 20px;
-      border-radius: 16px;
-      display: inline-block;
-      margin: 20px auto;
-      min-width: 200px;
-      min-height: 200px;
-    }
-    .pix-code {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin: 20px 0;
-      word-break: break-all;
-      font-size: 12px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all var(--transition);
-    }
-    .pix-code:hover { border-color: var(--gold); background: rgba(184, 154, 95, 0.1); }
     .payment-status {
       padding: 12px;
       border-radius: 12px;
@@ -435,11 +384,8 @@
     }
     .modal-btn.primary:disabled { background: rgba(255, 255, 255, 0.1); color: var(--muted); }
     .modal-btn:hover:not(:disabled) { transform: translateY(-3px); }
-    .payment-timer { color: var(--gold); font-size: 14px; margin: 12px 0; }
 
-    /* =========================================================
-       PAYMENT SECTION (REDESENHADA)
-    ========================================================= */
+    /* PAYMENT SECTION */
     .payment-section {
       max-width: 980px;
       margin: auto;
@@ -493,9 +439,6 @@
       max-width: 280px;
     }
 
-    /* =========================================================
-       FOOTER & MUSIC
-    ========================================================= */
     footer { padding: 120px 20px 60px; text-align: center; }
     .footer-logo { width: 140px; opacity: 0.95; margin-bottom: 28px; }
     .footer-text { color: var(--muted); line-height: 2; max-width: 900px; margin: auto; font-size: 15px; }
@@ -515,9 +458,6 @@
     }
     .music-toggle:hover { border-color: rgba(184, 154, 95, 0.35); transform: translateY(-3px); }
 
-    /* =========================================================
-       RESPONSIVE
-    ========================================================= */
     @media (max-width: 768px) {
       section { padding: 90px 18px; }
       .hero-actions { flex-direction: column; }
@@ -540,24 +480,20 @@
 </head>
 
 <body>
-  <!-- VIDEO -->
   <video autoplay muted loop playsinline class="ambient-video">
     <source src="background.mp4" type="video/mp4">
   </video>
 
-  <!-- LOADING -->
   <div class="loading-screen" id="loadingScreen">
     <img src="logo.png" class="loading-logo" alt="Cocina Velari">
     <div class="loading-text">Preparing your gourmet experience</div>
   </div>
 
-  <!-- AUDIO -->
   <audio id="ambientMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
   </audio>
   <button class="music-toggle" id="musicToggle">♫ Lounge Atmosphere</button>
 
-  <!-- HERO -->
   <header>
     <div class="hero">
       <img src="logo.png" alt="Cocina Velari" class="floating-logo">
@@ -573,16 +509,13 @@
     </div>
   </header>
 
-  <!-- MENU -->
   <section id="menu">
     <h2 class="section-title">Signature Menu</h2>
     <p class="section-subtitle">
       Ingredientes selecionados, preparo artesanal e acabamento gastronômico inspirados na alta cozinha contemporânea.
     </p>
-
     <div class="menu-grid">
-
-      <!-- CARD 1: Velvet Bourguignon (Carne) -->
+      <!-- Cards (mantidos exatamente como estavam) -->
       <article class="menu-card reveal" data-name="Velvet Bourguignon" data-price="42">
         <div class="image-wrapper">
           <img src="prato4.png" class="menu-image" alt="Velvet Bourguignon"
@@ -612,8 +545,7 @@
           </div>
         </div>
       </article>
-
-      <!-- CARD 2: Riviera Gold (Camarão) -->
+      <!-- Outros cards (iguais) -->
       <article class="menu-card reveal" data-name="Riviera Gold" data-price="46">
         <div class="image-wrapper">
           <img src="prato5.png" class="menu-image" alt="Riviera Gold"
@@ -643,8 +575,6 @@
           </div>
         </div>
       </article>
-
-      <!-- CARD 3: Velari Classic -->
       <article class="menu-card reveal" data-name="Velari Classic" data-price="29">
         <div class="image-wrapper">
           <img src="prato1.png" class="menu-image" alt="Velari Classic"
@@ -674,8 +604,6 @@
           </div>
         </div>
       </article>
-
-      <!-- CARD 4: Imperial Velari -->
       <article class="menu-card reveal" data-name="Imperial Velari" data-price="34">
         <div class="image-wrapper">
           <img src="prato2.png" class="menu-image" alt="Imperial Velari"
@@ -704,8 +632,6 @@
           </div>
         </div>
       </article>
-
-      <!-- CARD 5: Black Signature -->
       <article class="menu-card reveal" data-name="Black Signature" data-price="39">
         <div class="image-wrapper">
           <img src="prato3.png" class="menu-image" alt="Black Signature"
@@ -734,11 +660,9 @@
           </div>
         </div>
       </article>
-
     </div>
   </section>
 
-  <!-- PAYMENT (NOVO DESIGN) -->
   <section>
     <div class="payment-section reveal">
       <h2 class="section-title">Pagamento Exclusivo</h2>
@@ -763,27 +687,22 @@
     </div>
   </section>
 
-  <!-- PAYMENT MODAL -->
+  <!-- PAYMENT MODAL (SIMPLIFICADO) -->
   <div class="modal" id="paymentModal">
     <div class="modal-content">
       <h2>💎 Pagamento PIX</h2>
       <div id="paymentDetails"></div>
-      <div id="pixQrcodeContainer" style="display:none;">
-        <h3>Escaneie o QR Code</h3>
-        <div id="woovi-container"></div>
-        <p style="color:var(--muted); font-size:13px;">ou copie o código PIX:</p>
-        <div class="pix-code" id="pixCode" onclick="copyPixCode()">Gerando código PIX...</div>
-        <div class="payment-status pending" id="paymentStatus">⏳ Aguardando pagamento...</div>
-        <div class="payment-timer" id="paymentTimer"></div>
-      </div>
+      <div class="payment-status pending" id="paymentStatus">⏳ Aguardando pagamento...</div>
+      <div id="paymentTimer" style="color: var(--gold); font-size: 14px; margin: 12px 0;"></div>
       <div class="modal-actions">
         <button class="modal-btn" onclick="closePaymentModal()">Cancelar Pedido</button>
-        <button class="modal-btn primary" id="whatsappBtn" disabled onclick="sendToWhatsApp()">✅ Pagamento Confirmado - Enviar Pedido</button>
+        <button class="modal-btn primary" id="payPixBtn" onclick="startPixPayment()">Pagar com PIX</button>
+        <button class="modal-btn primary" id="whatsappBtn" style="display:none;" onclick="sendToWhatsApp()">✅ Pagamento Confirmado - Enviar Pedido</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DE DADOS DO CLIENTE -->
+  <!-- CUSTOMER MODAL (igual) -->
   <div class="modal" id="customerModal">
     <div class="modal-content">
       <h2>🛎️ Seus Dados</h2>
@@ -824,23 +743,19 @@
     </div>
   </div>
   
-  <!-- FOOTER -->
   <footer>
     <img src="logo.png" class="footer-logo" alt="Velari Logo">
     <p class="footer-text">Cocina Velari — Uma experiência gastronômica premium desenvolvida para clientes que valorizam exclusividade, sofisticação e excelência artesanal em cada detalhe cuidadosamente preparado.</p>
   </footer>
 
-  <!-- WOOVI/OPENPIX SCRIPT -->
   <script src="https://plugin.openpix.com.br/v1/openpix.js" async></script>
 
-  <!-- SCRIPTS -->
   <script>
     const WOOVI_APP_ID = 'app-2TOWV7MuGtrRmU7dZNrhIWsd';
     window.$openpix = [];
     window.$openpix.push(['config', { appID: WOOVI_APP_ID }]);
 
     let currentOrder = null;
-    let currentCorrelationID = null;
 
     /* LOADING */
     const loadingScreen = document.getElementById('loadingScreen');
@@ -886,7 +801,6 @@
     }
 
     window.addEventListener('click', startMusic, { once: true });
-
     toggle.addEventListener('click', async () => {
       if (!isPlaying) {
         startMusic();
@@ -906,7 +820,6 @@
         const extras = card.querySelector('.extras-wrapper');
         const checkoutBtn = card.querySelector('.checkout-btn');
         const isActive = extras.classList.contains('active');
-
         if (isActive) {
           extras.classList.remove('active');
           button.classList.remove('active');
@@ -922,14 +835,11 @@
       });
     });
 
-    /* =====================================================
-       CHECKOUT - AGORA COM ETAPA DE CLIENTE
-    ===================================================== */
+    /* CHECKOUT */
     const checkoutButtons = document.querySelectorAll('.checkout-btn');
     const paymentModal = document.getElementById('paymentModal');
     const customerModal = document.getElementById('customerModal');
 
-    // Referências aos campos do formulário
     const customerNameInput = document.getElementById('customerName');
     const customerPhoneInput = document.getElementById('customerPhone');
     const customerStreetInput = document.getElementById('customerStreet');
@@ -938,7 +848,6 @@
     const customerCityInput = document.getElementById('customerCity');
     const confirmCustomerBtn = document.getElementById('confirmCustomerBtn');
 
-    // Carregar dados salvos ao iniciar
     loadCustomerData();
 
     checkoutButtons.forEach(button => {
@@ -950,59 +859,42 @@
         const extras = card.querySelectorAll('input:checked');
         let extrasList = [];
         let extrasTotal = 0;
-
         extras.forEach(extra => {
           extrasList.push({ name: extra.value, price: parseFloat(extra.dataset.price) });
           extrasTotal += parseFloat(extra.dataset.price);
         });
-
         const total = basePrice + extrasTotal;
         currentOrder = { itemName, basePrice, extras: extrasList, extrasTotal, total, card };
-
-        // Abrir modal de cliente (não o de pagamento ainda)
         openCustomerModal();
       });
     });
 
-    // Evento do botão "Confirmar Dados" no modal de cliente
     confirmCustomerBtn.addEventListener('click', () => {
-      // Validação simples
       const name = customerNameInput.value.trim();
       const phone = customerPhoneInput.value.trim();
       const street = customerStreetInput.value.trim();
       const number = customerNumberInput.value.trim();
       const district = customerDistrictInput.value.trim();
       const city = customerCityInput.value.trim();
-
       if (!name || !phone || !street || !number || !district) {
         alert('Por favor, preencha todos os campos obrigatórios (exceto cidade).');
         return;
       }
-
-      // Salvar dados no localStorage
       saveCustomerData(name, phone, street, number, district, city);
-
-      // Adicionar ao currentOrder
       currentOrder.customer = { name, phone, street, number, district, city };
-
-      // Fechar modal de cliente e abrir modal de pagamento
       customerModal.classList.remove('active');
       openPaymentModal();
     });
 
     function openCustomerModal() {
-      // Preencher com dados salvos, se existirem
       loadCustomerData();
       customerModal.classList.add('active');
     }
-
     function closeCustomerModal() {
       customerModal.classList.remove('active');
-      // Não limpa o pedido, pois pode querer voltar e ajustar
     }
 
     function openPaymentModal() {
-      // Montar resumo no modal de pagamento
       document.getElementById('paymentDetails').innerHTML = `
         <div style="background:rgba(255,255,255,0.03); border-radius:16px; padding:20px; text-align:left; margin:20px 0;">
           <p style="margin:8px 0;"><strong>Prato:</strong> ${currentOrder.itemName}</p>
@@ -1012,81 +904,44 @@
           <p style="margin:12px 0 0; font-size:20px; color:var(--gold); font-weight:700;">Total: R$ ${currentOrder.total.toFixed(2)}</p>
         </div>
       `;
-
-      // Resetar estado do modal de pagamento
-      document.getElementById('pixQrcodeContainer').style.display = 'block';
-      document.getElementById('whatsappBtn').disabled = true;
-      document.getElementById('whatsappBtn').style.display = 'none'; // esconde whatsapp até confirmar
       document.getElementById('paymentStatus').className = 'payment-status pending';
       document.getElementById('paymentStatus').innerHTML = '⏳ Aguardando pagamento...';
       document.getElementById('paymentTimer').innerHTML = '';
-      document.getElementById('woovi-container').innerHTML = '';
-
+      document.getElementById('payPixBtn').style.display = 'inline-block';
+      document.getElementById('whatsappBtn').style.display = 'none';
       paymentModal.classList.add('active');
-      // Inicia o pagamento automaticamente (comportamento original)
-      generateWooviPix(currentOrder.total);
     }
 
-    /* =====================================================
-       FUNÇÕES DE LOCAL STORAGE
-    ===================================================== */
-    function saveCustomerData(name, phone, street, number, district, city) {
-      const data = { name, phone, street, number, district, city };
-      localStorage.setItem('cocinaVelariCustomer', JSON.stringify(data));
-    }
-
-    function loadCustomerData() {
-      const saved = localStorage.getItem('cocinaVelariCustomer');
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          customerNameInput.value = data.name || '';
-          customerPhoneInput.value = data.phone || '';
-          customerStreetInput.value = data.street || '';
-          customerNumberInput.value = data.number || '';
-          customerDistrictInput.value = data.district || '';
-          customerCityInput.value = data.city || '';
-        } catch (e) {
-          console.error('Erro ao carregar dados do cliente', e);
-        }
-      }
-    }
-
-    /* GERAR PIX VIA WOOVI */
-    function generateWooviPix(amount) {
-      if (WOOVI_APP_ID === 'app-2TOWV7MuGtrRmU7dZNrhIWsd') {
-        simulatePixPayment(amount);
-        return;
-      }
-
-      const valorEmCentavos = Math.round(amount * 100);
+    function startPixPayment() {
+      if (!currentOrder) return;
+      const valorEmCentavos = Math.round(currentOrder.total * 100);
       const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-      currentCorrelationID = correlationID;
-
-      const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = '⏱️ Gerando QR Code...';
-
+      document.getElementById('paymentTimer').innerHTML = '⏱️ Abrindo checkout...';
       window.$openpix.push([
         'pix',
         {
           value: valorEmCentavos,
           correlationID: correlationID,
           description: currentOrder.itemName + ' - Cocina Velari',
-          onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
+          onLoad: () => { document.getElementById('paymentTimer').innerHTML = '⏱️ Aguardando pagamento...'; },
           onError: () => {
-            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
             document.getElementById('paymentStatus').className = 'payment-status rejected';
             document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
+            document.getElementById('paymentTimer').innerHTML = 'Tente novamente.';
           }
         }
       ]);
     }
 
-    /* ESCUTAR PAGAMENTO */
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'openpix') {
-        if (event.data.data && event.data.data.status === 'COMPLETED') confirmPayment();
-        if (event.data.data && event.data.data.status === 'REJECTED') {
+        if (event.data.data && event.data.data.status === 'COMPLETED') {
+          document.getElementById('paymentStatus').className = 'payment-status approved';
+          document.getElementById('paymentStatus').innerHTML = '✅ Pagamento aprovado!';
+          document.getElementById('paymentTimer').innerHTML = '🎉 Pagamento confirmado!';
+          document.getElementById('payPixBtn').style.display = 'none';
+          document.getElementById('whatsappBtn').style.display = 'inline-block';
+        } else if (event.data.data && event.data.data.status === 'REJECTED') {
           document.getElementById('paymentStatus').className = 'payment-status rejected';
           document.getElementById('paymentStatus').innerHTML = '❌ Pagamento rejeitado';
           document.getElementById('paymentTimer').innerHTML = 'Tente novamente ou cancele.';
@@ -1094,40 +949,6 @@
       }
     });
 
-    /* SIMULAÇÃO */
-    function simulatePixPayment(amount) {
-      const simulatedPixCode = `00020126580014br.gov.bcb.pix0136${generateRandomKey()}5204000053039865405${amount.toFixed(2)}5802BR5925Cocina Velari Premium6009Sao Paulo62070503***6304${generateRandomKey().substring(0,4)}`;
-      document.getElementById('pixCode').textContent = simulatedPixCode;
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(simulatedPixCode)}`;
-      document.getElementById('woovi-container').innerHTML = `<img src="${qrUrl}" alt="QR Code PIX" style="width:200px; height:200px;">`;
-
-      let secondsLeft = 5;
-      const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = `⏱️ Simulação: ${secondsLeft}s para confirmar`;
-      const timer = setInterval(() => {
-        secondsLeft--;
-        timerDiv.innerHTML = `⏱️ Simulação: ${secondsLeft}s para confirmar`;
-        if (secondsLeft <= 0) { clearInterval(timer); confirmPayment(); }
-      }, 1000);
-      window.simulatedTimer = timer;
-    }
-
-    function generateRandomKey() {
-      return Array.from({length: 32}, () => Math.floor(Math.random() * 10)).join('');
-    }
-
-    /* CONFIRMAR */
-    function confirmPayment() {
-      document.getElementById('paymentStatus').className = 'payment-status approved';
-      document.getElementById('paymentStatus').innerHTML = '✅ Pagamento aprovado!';
-      document.getElementById('paymentTimer').innerHTML = '🎉 Pagamento confirmado!';
-      document.getElementById('whatsappBtn').disabled = false;
-      document.getElementById('whatsappBtn').style.display = 'inline-block';
-      document.getElementById('whatsappBtn').style.animation = 'pulse 1s infinite';
-      if (window.simulatedTimer) clearInterval(window.simulatedTimer);
-    }
-
-    /* WHATSAPP (COM DADOS DO CLIENTE) */
     function sendToWhatsApp() {
       if (!currentOrder) return;
       const c = currentOrder.customer || {};
@@ -1136,9 +957,7 @@
       message += `💰 *Valor Base:* R$ ${currentOrder.basePrice.toFixed(2)}%0A`;
       if (currentOrder.extras.length > 0) {
         message += `%0A*Extras:*%0A`;
-        currentOrder.extras.forEach(extra => {
-          message += `➕ ${extra.name} — R$ ${extra.price.toFixed(2)}%0A`;
-        });
+        currentOrder.extras.forEach(extra => { message += `➕ ${extra.name} — R$ ${extra.price.toFixed(2)}%0A`; });
       }
       message += `%0A💎 *TOTAL PAGO:* R$ ${currentOrder.total.toFixed(2)}%0A`;
       message += `✅ *Status:* Pagamento Confirmado%0A%0A`;
@@ -1146,7 +965,6 @@
       message += `📱 *WhatsApp:* ${c.phone || 'N/I'}%0A`;
       message += `📍 *Entrega:* ${c.street || ''}, ${c.number || ''} - ${c.district || ''} - ${c.city || ''}%0A%0A`;
       message += `📞 Aguardando confirmação do estabelecimento.`;
-
       window.open(`https://wa.me/5583921505963?text=${message}`, '_blank');
       closePaymentModal();
       if (currentOrder.card) {
@@ -1159,30 +977,8 @@
       currentOrder = null;
     }
 
-    /* COPIAR PIX */
-    function copyPixCode() {
-      const pixCode = document.getElementById('pixCode').textContent;
-      if (pixCode === 'Gerando código PIX...' || pixCode === 'Clique para copiar') return;
-      navigator.clipboard.writeText(pixCode).then(() => {
-        const codeDiv = document.getElementById('pixCode');
-        const originalText = codeDiv.textContent;
-        codeDiv.textContent = '✅ Código PIX copiado!';
-        codeDiv.style.borderColor = '#4caf50';
-        setTimeout(() => { codeDiv.textContent = originalText; codeDiv.style.borderColor = ''; }, 2000);
-      }).catch(err => console.error(err));
-    }
-
-    /* FECHAR MODAL (mantém endereço, limpa pedido) */
     function closePaymentModal() {
       paymentModal.classList.remove('active');
-      if (window.simulatedTimer) clearInterval(window.simulatedTimer);
-      document.getElementById('pixQrcodeContainer').style.display = 'none';
-      document.getElementById('whatsappBtn').disabled = true;
-      document.getElementById('whatsappBtn').style.display = 'none';
-      document.getElementById('woovi-container').innerHTML = '';
-      document.getElementById('pixCode').textContent = 'Clique para copiar';
-      
-      // Reseta a seleção do card, mas mantém o endereço salvo
       if (currentOrder && currentOrder.card) {
         const card = currentOrder.card;
         const extras = card.querySelector('.extras-wrapper');
@@ -1194,13 +990,31 @@
         checkoutBtn.classList.remove('visible');
         extras.querySelectorAll('input').forEach(input => { input.checked = false; });
       }
-
       currentOrder = null;
-      currentCorrelationID = null;
     }
 
     paymentModal.addEventListener('click', (e) => { if (e.target === paymentModal) closePaymentModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && paymentModal.classList.contains('active')) closePaymentModal(); });
+
+    /* LOCAL STORAGE */
+    function saveCustomerData(name, phone, street, number, district, city) {
+      const data = { name, phone, street, number, district, city };
+      localStorage.setItem('cocinaVelariCustomer', JSON.stringify(data));
+    }
+    function loadCustomerData() {
+      const saved = localStorage.getItem('cocinaVelariCustomer');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          customerNameInput.value = data.name || '';
+          customerPhoneInput.value = data.phone || '';
+          customerStreetInput.value = data.street || '';
+          customerNumberInput.value = data.number || '';
+          customerDistrictInput.value = data.district || '';
+          customerCityInput.value = data.city || '';
+        } catch (e) { console.error('Erro ao carregar dados do cliente', e); }
+      }
+    }
 
     /* ANIMAÇÃO PULSE */
     const style = document.createElement('style');
