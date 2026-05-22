@@ -1015,6 +1015,7 @@
 
       // Resetar estado do modal de pagamento
       document.getElementById('pixQrcodeContainer').style.display = 'block';
+      document.getElementById('woovi-container').style.display = 'block'; // 👈 CORREÇÃO 3
       document.getElementById('whatsappBtn').disabled = true;
       document.getElementById('whatsappBtn').style.display = 'none'; // esconde whatsapp até confirmar
       document.getElementById('paymentStatus').className = 'payment-status pending';
@@ -1054,7 +1055,8 @@
 
     /* GERAR PIX VIA WOOVI */
     function generateWooviPix(amount) {
-      if (WOOVI_APP_ID === 'app-2TOWV7MuGtrRmU7dZNrhIWsd') {
+      // 👇 CORREÇÃO 1: AppID real NÃO chama simulação
+      if (WOOVI_APP_ID === 'SEU_APPID_AQUI' || WOOVI_APP_ID === '') {
         simulatePixPayment(amount);
         return;
       }
@@ -1066,12 +1068,14 @@
       const timerDiv = document.getElementById('paymentTimer');
       timerDiv.innerHTML = '⏱️ Gerando QR Code...';
 
+      // 👇 CORREÇÃO 2: container adicionado
       window.$openpix.push([
         'pix',
         {
           value: valorEmCentavos,
           correlationID: correlationID,
           description: currentOrder.itemName + ' - Cocina Velari',
+          container: '#woovi-container',  // 👈 CORREÇÃO 2
           onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
           onError: () => {
             timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
