@@ -354,89 +354,27 @@
     .checkout-btn.visible { display: block; }
     .checkout-btn:hover { transform: scale(1.03); box-shadow: 0 15px 35px rgba(184, 154, 95, 0.3); }
 
-    /* =========================================================
-       PAYMENT MODAL
-    ========================================================= */
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.92);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 20px;
-    }
-    .modal.active { display: flex; }
-    .modal-content {
-      background: linear-gradient(145deg, rgba(20, 20, 20, 0.98), rgba(10, 10, 10, 0.98));
-      border: 1px solid rgba(184, 154, 95, 0.3);
-      border-radius: 32px;
-      padding: 40px;
-      max-width: 500px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .modal h2 { font-family: 'Cinzel', serif; color: var(--gold); margin-bottom: 20px; font-size: clamp(22px, 4vw, 32px); }
-    .modal h3 { color: var(--text); margin: 20px 0; font-size: 18px; }
-    #woovi-container {
-      background: white;
-      padding: 20px;
-      border-radius: 16px;
-      display: inline-block;
-      margin: 20px auto;
-      min-width: 200px;
-      min-height: 200px;
-    }
-    .pix-code {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin: 20px 0;
-      word-break: break-all;
-      font-size: 12px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all var(--transition);
-    }
-    .pix-code:hover { border-color: var(--gold); background: rgba(184, 154, 95, 0.1); }
-    .payment-status {
-      padding: 12px;
-      border-radius: 12px;
-      margin: 16px 0;
-      font-weight: 600;
-    }
-    .payment-status.pending { background: rgba(255, 193, 7, 0.15); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3); }
-    .payment-status.approved { background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); }
-    .payment-status.rejected { background: rgba(244, 67, 54, 0.15); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3); }
-    .modal-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-    .modal-btn {
-      padding: 14px 28px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--text);
-      cursor: pointer;
-      transition: all var(--transition);
-      font-weight: 600;
-      font-size: 14px;
-    }
-    .modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .modal-btn.primary {
-      background: linear-gradient(135deg, #b89a5f, #8b7340);
-      border: none;
-      color: #000;
-      font-weight: 700;
-    }
-    .modal-btn.primary:disabled { background: rgba(255, 255, 255, 0.1); color: var(--muted); }
-    .modal-btn:hover:not(:disabled) { transform: translateY(-3px); }
-    .payment-timer { color: var(--gold); font-size: 14px; margin: 12px 0; }
-
+      <!-- PAYMENT MODAL -->
+      <div class="modal" id="paymentModal">
+      <div class="modal-content">
+      <h2>💎 Pagamento PIX</h2>
+      <div id="paymentDetails"></div>
+      <div id="pixQrcodeContainer" style="display:none;">
+      <h3>Escaneie o QR Code</h3>
+      <div id="woovi-container"></div>
+      <p style="color:var(--muted); font-size:13px;">ou copie o código PIX:</p>
+      <div class="pix-code" id="pixCode" onclick="copyPixCode()">Gerando código PIX...</div>
+      <div class="payment-status pending" id="paymentStatus">⏳ Aguardando pagamento...</div>
+      <div class="payment-timer" id="paymentTimer"></div>
+      </div>
+      <div class="modal-actions">
+      <button class="modal-btn" onclick="cancelOrder()">Cancelar</button>
+      <button class="modal-btn primary" id="payPixBtn" onclick="generateWooviPix(currentOrder.total)">Pagar com PIX</button>
+      <button class="modal-btn primary" id="whatsappBtn" disabled onclick="sendToWhatsApp()">✅ Pagamento Confirmado - Enviar Pedido</button>
+      </div>
+      </div>
+      </div>
+    
     /* =========================================================
        PAYMENT SECTION (REDESENHADA)
     ========================================================= */
@@ -1001,7 +939,7 @@
       // Não limpa o pedido, pois pode querer voltar e ajustar
     }
 
-    function openPaymentModal() {
+          function openPaymentModal() {
       // Montar resumo no modal de pagamento
       document.getElementById('paymentDetails').innerHTML = `
         <div style="background:rgba(255,255,255,0.03); border-radius:16px; padding:20px; text-align:left; margin:20px 0;">
@@ -1016,13 +954,58 @@
       // Resetar estado do modal de pagamento
       document.getElementById('pixQrcodeContainer').style.display = 'block';
       document.getElementById('whatsappBtn').disabled = true;
+      document.getElementById('whatsappBtn').style.display = 'none';  // esconde até confirmar
+      document.getElementById('payPixBtn').style.display = 'inline-block';  // mostra botão pagar
       document.getElementById('paymentStatus').className = 'payment-status pending';
       document.getElementById('paymentStatus').innerHTML = '⏳ Aguardando pagamento...';
       document.getElementById('paymentTimer').innerHTML = '';
       document.getElementById('woovi-container').innerHTML = '';
 
       paymentModal.classList.add('active');
-      generateWooviPix(currentOrder.total);
+      // Não chama mais generateWooviPix automaticamente – espera o clique no botão
+    }
+
+    /* CANCELAR PEDIDO (mantém endereço) */
+    function cancelOrder() {
+      // Fecha o modal
+      paymentModal.classList.remove('active');
+      if (window.simulatedTimer) clearInterval(window.simulatedTimer);
+      
+      // Reseta os seletores do card (extras, checkout)
+      if (currentOrder && currentOrder.card) {
+        const card = currentOrder.card;
+        const extras = card.querySelector('.extras-wrapper');
+        const orderBtn = card.querySelector('.order-btn');
+        const checkoutBtn = card.querySelector('.checkout-btn');
+        extras.classList.remove('active');
+        orderBtn.classList.remove('active');
+        orderBtn.innerHTML = 'Selecionar';
+        checkoutBtn.classList.remove('visible');
+        extras.querySelectorAll('input').forEach(input => { input.checked = false; });
+      }
+
+      // Limpa o pedido atual, mas mantém os dados do cliente salvos
+      currentOrder = null;
+      currentCorrelationID = null;
+
+      document.getElementById('pixQrcodeContainer').style.display = 'none';
+      document.getElementById('whatsappBtn').disabled = true;
+      document.getElementById('whatsappBtn').style.display = 'none';
+      document.getElementById('woovi-container').innerHTML = '';
+      document.getElementById('pixCode').textContent = 'Clique para copiar';
+    }
+
+    /* FECHAR MODAL (após pagamento confirmado) */
+    function closePaymentModal() {
+      paymentModal.classList.remove('active');
+      if (window.simulatedTimer) clearInterval(window.simulatedTimer);
+      document.getElementById('pixQrcodeContainer').style.display = 'none';
+      document.getElementById('whatsappBtn').disabled = true;
+      document.getElementById('whatsappBtn').style.display = 'none';
+      document.getElementById('woovi-container').innerHTML = '';
+      document.getElementById('pixCode').textContent = 'Clique para copiar';
+      currentOrder = null;
+      currentCorrelationID = null;
     }
 
     /* =====================================================
@@ -1114,12 +1097,15 @@
       return Array.from({length: 32}, () => Math.floor(Math.random() * 10)).join('');
     }
 
-    /* CONFIRMAR */
-    function confirmPayment() {
+    /* confirmar Pagametno*/ 
+    
+        function confirmPayment() {
       document.getElementById('paymentStatus').className = 'payment-status approved';
       document.getElementById('paymentStatus').innerHTML = '✅ Pagamento aprovado!';
       document.getElementById('paymentTimer').innerHTML = '🎉 Pagamento confirmado!';
       document.getElementById('whatsappBtn').disabled = false;
+      document.getElementById('whatsappBtn').style.display = 'inline-block';  // mostra
+      document.getElementById('payPixBtn').style.display = 'none';           // esconde pagar
       document.getElementById('whatsappBtn').style.animation = 'pulse 1s infinite';
       if (window.simulatedTimer) clearInterval(window.simulatedTimer);
     }
