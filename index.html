@@ -632,7 +632,6 @@
       <div id="paymentDetails"></div>
       <div id="pixQrcodeContainer" style="display:none;">
         <h3>Escaneie o QR Code</h3>
-        <div id="woovi-container"></div>
         <div class="payment-status pending" id="paymentStatus">⏳ Aguardando pagamento...</div>
         <div class="payment-timer" id="paymentTimer"></div>
       </div>
@@ -688,10 +687,9 @@
     <p class="footer-text">Cocina Velari — Uma experiência gastronômica premium desenvolvida para clientes que valorizam exclusividade, sofisticação e excelência artesanal em cada detalhe cuidadosamente preparado.</p>
   </footer>
 
-  <!-- SCRIPT DO PLUGIN COM node APONTANDO PARA O CONTAINER -->
-  <script src="https://plugin.openpix.com.br/v1/openpix.js?node=#woovi-container"></script>
+  <script src="https://plugin.openpix.com.br/v1/openpix.js"></script>
   <script>
-    // AppID do Plugin (formato longo base64)
+    // AppID do Plugin (formato longo base64, fornecido pela Woovi)
     const WOOVI_APP_ID = 'Q2xpZW50X0lkX2UyODRiMjA5LWEzZDctNGYyZS04ZDBjLTdmNTUwMjM2NjdhYTpDbGllbnRfU2VjcmV0XzZOdkU0TkZ2NS9QMEZKdmRzUlJLQ3p4MzlMNUdIZ25lVzVDeHI4M3dmSWc9';
     window.$openpix = [];
     window.$openpix.push(['config', { appID: WOOVI_APP_ID }]);
@@ -872,14 +870,14 @@
       }
     }
 
-    /* GERAR PIX VIA MODAL INLINE (SEM POPUP) */
+    /* GERAR PIX VIA POPUP (FUNCIONAMENTO CONFIÁVEL) */
     function generateWooviPix(amount) {
       const valorEmCentavos = Math.round(amount * 100);
       const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
       currentCorrelationID = correlationID;
 
       const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = '⏱️ Gerando QR Code...';
+      timerDiv.innerHTML = '⏱️ Abrindo janela de pagamento...';
 
       window.$openpix.push([
         'pix',
@@ -887,7 +885,7 @@
           value: valorEmCentavos,
           correlationID: correlationID,
           description: currentOrder.itemName + ' - Cocina Velari',
-          modal: false,
+          popup: true,
           onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
           onError: (error) => {
             console.error(error);
