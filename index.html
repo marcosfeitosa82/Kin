@@ -878,7 +878,7 @@
       currentCorrelationID = correlationID;
 
       try {
-        const response = await fetch('https://fastapi-python-boilerplate-hena-rho-75.vercel.app/criar-pix', {
+        const response = await fetch('https://cocinavelariexperience.vercel.app/criar-pix', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -911,7 +911,7 @@
     async function verificarStatus(correlationID) {
       const interval = setInterval(async () => {
         try {
-          const resp = await fetch(`https://fastapi-python-boilerplate-hena-rho-75.vercel.app/verificar-pix?correlationID=${correlationID}`);
+          const resp = await fetch(`https://cocinavelariexperience.vercel.app/verificar-pix?correlationID=${correlationID}`);
           const data = await resp.json();
           if (data.status === 'COMPLETED') {
             clearInterval(interval);
