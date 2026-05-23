@@ -632,9 +632,6 @@
       <div id="paymentDetails"></div>
       <div id="pixQrcodeContainer" style="display:none;">
         <h3>Escaneie o QR Code</h3>
-        <div id="woovi-container"></div>
-        <p style="color:var(--muted); font-size:13px;">ou copie o código PIX:</p>
-        <div class="pix-code" id="pixCode" onclick="copyPixCode()">Gerando código PIX...</div>
         <div class="payment-status pending" id="paymentStatus">⏳ Aguardando pagamento...</div>
         <div class="payment-timer" id="paymentTimer"></div>
       </div>
@@ -692,9 +689,7 @@
 
   <script src="https://plugin.openpix.com.br/v1/openpix.js"></script>
   <script>
-    // ====================================================
-    // CONFIGURAÇÃO DO APPID (ATUALIZADO)
-    // ====================================================
+    // AppID do Plugin (formato longo base64)
     const WOOVI_APP_ID = 'Q2xpZW50X0lkX2UyODRiMjA5LWEzZDctNGYyZS04ZDBjLTdmNTUwMjM2NjdhYTpDbGllbnRfU2VjcmV0XzZOdkU0TkZ2NS9QMEZKdmRzUlJLQ3p4MzlMNUdIZ25lVzVDeHI4M3dmSWc9';
     window.$openpix = [];
     window.$openpix.push(['config', { appID: WOOVI_APP_ID }]);
@@ -846,13 +841,11 @@
         </div>
       `;
       document.getElementById('pixQrcodeContainer').style.display = 'block';
-      document.getElementById('woovi-container').style.display = 'block';
       document.getElementById('whatsappBtn').disabled = true;
       document.getElementById('whatsappBtn').style.display = 'none';
       document.getElementById('paymentStatus').className = 'payment-status pending';
       document.getElementById('paymentStatus').innerHTML = '⏳ Aguardando pagamento...';
       document.getElementById('paymentTimer').innerHTML = '';
-      document.getElementById('woovi-container').innerHTML = '';
       paymentModal.classList.add('active');
       generateWooviPix(currentOrder.total);
     }
@@ -877,14 +870,14 @@
       }
     }
 
-    /* GERAR PIX VIA PLUGIN (POPUP) */
+    /* GERAR PIX VIA POPUP (SEM CONTAINER) */
     function generateWooviPix(amount) {
       const valorEmCentavos = Math.round(amount * 100);
       const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
       currentCorrelationID = correlationID;
 
       const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = '⏱️ Gerando QR Code...';
+      timerDiv.innerHTML = '⏱️ Abrindo janela de pagamento...';
 
       window.$openpix.push([
         'pix',
@@ -953,25 +946,11 @@
       currentOrder = null;
     }
 
-    function copyPixCode() {
-      const pixCode = document.getElementById('pixCode').textContent;
-      if (pixCode === 'Gerando código PIX...' || pixCode === 'Clique para copiar') return;
-      navigator.clipboard.writeText(pixCode).then(() => {
-        const codeDiv = document.getElementById('pixCode');
-        const originalText = codeDiv.textContent;
-        codeDiv.textContent = '✅ Código PIX copiado!';
-        codeDiv.style.borderColor = '#4caf50';
-        setTimeout(() => { codeDiv.textContent = originalText; codeDiv.style.borderColor = ''; }, 2000);
-      }).catch(err => console.error(err));
-    }
-
     function closePaymentModal() {
       paymentModal.classList.remove('active');
       document.getElementById('pixQrcodeContainer').style.display = 'none';
       document.getElementById('whatsappBtn').disabled = true;
       document.getElementById('whatsappBtn').style.display = 'none';
-      document.getElementById('woovi-container').innerHTML = '';
-      document.getElementById('pixCode').textContent = 'Clique para copiar';
       if (currentOrder && currentOrder.card) {
         const card = currentOrder.card;
         const extras = card.querySelector('.extras-wrapper');
