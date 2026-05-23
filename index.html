@@ -690,6 +690,9 @@
       <div id="paymentDetails"></div>
       <div id="pixQrcodeContainer" style="display:none;">
         <h3>Escaneie o QR Code</h3>
+        <div id="woovi-container"></div>
+        <p style="color:var(--muted); font-size:13px;">ou copie o código PIX:</p>
+        <div class="pix-code" id="pixCode" onclick="copyPixCode()">Gerando código PIX...</div>
         <div class="payment-status pending" id="paymentStatus">⏳ Aguardando pagamento...</div>
         <div class="payment-timer" id="paymentTimer"></div>
       </div>
@@ -745,15 +748,13 @@
     <p class="footer-text">Cocina Velari — Uma experiência gastronômica premium desenvolvida para clientes que valorizam exclusividade, sofisticação e excelência artesanal em cada detalhe cuidadosamente preparado.</p>
   </footer>
 
-  <script src="https://plugin.openpix.com.br/v1/openpix.js"></script>
   <script>
-    // AppID do Plugin (formato longo base64, fornecido pela Woovi)
-    const WOOVI_APP_ID = 'Q2xpZW50X0lkX2MzZTExOGE2LTA1ZDUtNDVkMy05NWNmLWY5OGQ5MjRlNGRlMzpDbGllbnRfU2VjcmV0XzZNeUFmOXRPUTM1Ui8rWHp3bkQvZ3p0T1lvL0Ryb1puRkw3K2R0ak1TMkE9';
-    window.$openpix = [];
-    window.$openpix.push(['config', { appID: WOOVI_APP_ID }]);
+    // Usando a API Vercel para criar cobrança PIX
+    const API_BASE = 'https://cocinavelariexperience.vercel.app'; // 👈 seu domínio principal
 
     let currentOrder = null;
     let currentCorrelationID = null;
+    let paymentCheckInterval = null;
 
     /* LOADING */
     const loadingScreen = document.getElementById('loadingScreen');
@@ -899,13 +900,15 @@
         </div>
       `;
       document.getElementById('pixQrcodeContainer').style.display = 'block';
+      document.getElementById('woovi-container').innerHTML = '';
+      document.getElementById('pixCode').textContent = 'Gerando código PIX...';
       document.getElementById('whatsappBtn').disabled = true;
       document.getElementById('whatsappBtn').style.display = 'none';
       document.getElementById('paymentStatus').className = 'payment-status pending';
       document.getElementById('paymentStatus').innerHTML = '⏳ Aguardando pagamento...';
       document.getElementById('paymentTimer').innerHTML = '';
       paymentModal.classList.add('active');
-      generateWooviPix(currentOrder.total);
+      generatePixViaAPI(currentOrder.total);
     }
 
     /* LOCAL STORAGE */
@@ -928,44 +931,75 @@
       }
     }
 
-    /* GERAR PIX VIA POPUP (FUNCIONAMENTO CONFIÁVEL) */
-    function generateWooviPix(amount) {
-      const valorEmCentavos = Math.round(amount * 100);
+    /* CHAMADA À API DA VERCEL */
+    async function generatePixViaAPI(amount) {
+      const timerDiv = document.getElementById('paymentTimer');
+      timerDiv.innerHTML = '⏱️ Gerando QR Code...';
+
       const correlationID = 'pedido-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
       currentCorrelationID = correlationID;
 
-      const timerDiv = document.getElementById('paymentTimer');
-      timerDiv.innerHTML = '⏱️ Abrindo janela de pagamento...';
+      try {
+        const response = await fetch(`${API_BASE}/criar-pix`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            total: amount,
+            descricao: `${currentOrder.itemName} - Cocina Velari`,
+            correlationID: correlationID
+          })
+        });
 
-      window.$openpix.push([
-        'pix',
-        {
-          value: valorEmCentavos,
-          correlationID: correlationID,
-          description: currentOrder.itemName + ' - Cocina Velari',
-          popup: true,
-          onLoad: () => { timerDiv.innerHTML = '⏱️ Aguardando pagamento...'; },
-          onError: (error) => {
-            console.error(error);
-            timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
-            document.getElementById('paymentStatus').className = 'payment-status rejected';
-            document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
-          }
+        if (!response.ok) {
+          throw new Error(`Erro ${response.status}`);
         }
-      ]);
+
+        const data = await response.json();
+
+        if (data.sucesso) {
+          // Exibir QR Code e código PIX
+          document.getElementById('woovi-container').innerHTML = `
+            <img src="${data.qrCodeImage}" alt="QR Code PIX" style="width:200px; height:200px;">
+          `;
+          document.getElementById('pixCode').textContent = data.brCode;
+          timerDiv.innerHTML = '⏱️ Aguardando pagamento...';
+          startPaymentCheck(data.correlationID);
+        } else {
+          throw new Error(data.erro || 'Falha na API');
+        }
+      } catch (error) {
+        console.error(error);
+        timerDiv.innerHTML = '❌ Erro ao gerar PIX.';
+        document.getElementById('paymentStatus').className = 'payment-status rejected';
+        document.getElementById('paymentStatus').innerHTML = '❌ Erro ao gerar PIX';
+      }
     }
 
-    /* ESCUTAR PAGAMENTO */
-    window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'openpix') {
-        if (event.data.data && event.data.data.status === 'COMPLETED') confirmPayment();
-        if (event.data.data && event.data.data.status === 'REJECTED') {
-          document.getElementById('paymentStatus').className = 'payment-status rejected';
-          document.getElementById('paymentStatus').innerHTML = '❌ Pagamento rejeitado';
-          document.getElementById('paymentTimer').innerHTML = 'Tente novamente ou cancele.';
+    function startPaymentCheck(correlationID) {
+      if (paymentCheckInterval) clearInterval(paymentCheckInterval);
+      let attempts = 0;
+      const maxAttempts = 30; // 5 minutos
+      paymentCheckInterval = setInterval(async () => {
+        attempts++;
+        try {
+          const resp = await fetch(`${API_BASE}/verificar-pix?correlationID=${correlationID}`);
+          const data = await resp.json();
+          if (data.status === 'COMPLETED') {
+            clearInterval(paymentCheckInterval);
+            confirmPayment();
+          } else if (data.status === 'EXPIRED' || attempts >= maxAttempts) {
+            clearInterval(paymentCheckInterval);
+            document.getElementById('paymentStatus').className = 'payment-status rejected';
+            document.getElementById('paymentStatus').innerHTML = '❌ Pagamento expirado';
+            document.getElementById('paymentTimer').innerHTML = 'Tempo esgotado';
+          } else {
+            document.getElementById('paymentTimer').innerHTML = `⏱️ Aguardando pagamento... (${attempts}/${maxAttempts})`;
+          }
+        } catch (e) {
+          console.error('Erro na verificação:', e);
         }
-      }
-    });
+      }, 5000); // verifica a cada 5 segundos
+    }
 
     function confirmPayment() {
       document.getElementById('paymentStatus').className = 'payment-status approved';
@@ -974,6 +1008,7 @@
       document.getElementById('whatsappBtn').disabled = false;
       document.getElementById('whatsappBtn').style.display = 'inline-block';
       document.getElementById('whatsappBtn').style.animation = 'pulse 1s infinite';
+      if (paymentCheckInterval) clearInterval(paymentCheckInterval);
     }
 
     function sendToWhatsApp() {
@@ -1004,11 +1039,26 @@
       currentOrder = null;
     }
 
+    function copyPixCode() {
+      const pixCode = document.getElementById('pixCode').textContent;
+      if (pixCode === 'Gerando código PIX...' || pixCode === 'Clique para copiar') return;
+      navigator.clipboard.writeText(pixCode).then(() => {
+        const codeDiv = document.getElementById('pixCode');
+        const originalText = codeDiv.textContent;
+        codeDiv.textContent = '✅ Código PIX copiado!';
+        codeDiv.style.borderColor = '#4caf50';
+        setTimeout(() => { codeDiv.textContent = originalText; codeDiv.style.borderColor = ''; }, 2000);
+      }).catch(err => console.error(err));
+    }
+
     function closePaymentModal() {
       paymentModal.classList.remove('active');
+      if (paymentCheckInterval) clearInterval(paymentCheckInterval);
       document.getElementById('pixQrcodeContainer').style.display = 'none';
       document.getElementById('whatsappBtn').disabled = true;
       document.getElementById('whatsappBtn').style.display = 'none';
+      document.getElementById('woovi-container').innerHTML = '';
+      document.getElementById('pixCode').textContent = 'Clique para copiar';
       if (currentOrder && currentOrder.card) {
         const card = currentOrder.card;
         const extras = card.querySelector('.extras-wrapper');
