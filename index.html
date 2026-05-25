@@ -1023,32 +1023,37 @@ toggle.addEventListener('click', async () => {
     }
 
     function sendToWhatsApp() {
-      if (!currentOrder) return;
-      const c = currentOrder.customer || {};
-      let message = `🍽️ *PEDIDO CONFIRMADO - COCINA VELARI*%0A%0A`;
-      message += `📋 *Prato:* ${currentOrder.itemName}%0A`;
-      message += `💰 *Valor Base:* R$ ${currentOrder.basePrice.toFixed(2)}%0A`;
-      if (currentOrder.extras.length > 0) {
-        message += `%0A*Extras:*%0A`;
-        currentOrder.extras.forEach(extra => { message += `➕ ${extra.name} — R$ ${extra.price.toFixed(2)}%0A`; });
-      }
-      message += `%0A💎 *TOTAL PAGO:* R$ ${currentOrder.total.toFixed(2)}%0A`;
-      message += `✅ *Status:* Pagamento Confirmado%0A%0A`;
-      message += `👤 *Cliente:* ${c.name || 'N/I'}%0A`;
-      message += `📱 *WhatsApp:* ${c.phone || 'N/I'}%0A`;
-      message += `📍 *Entrega:* ${c.street || ''}, ${c.number || ''} - ${c.district || ''} - ${c.city || ''}%0A%0A`;
-      message += `📞 Aguardando confirmação do estabelecimento.`;
-      window.open(`https://wa.me/5583921505963?text=${message}`, '_blank');
-      closePaymentModal();
-      if (currentOrder.card) {
-        const ew = currentOrder.card.querySelector('.extras-wrapper');
-        const ob = currentOrder.card.querySelector('.order-btn');
-        const cb = currentOrder.card.querySelector('.checkout-btn');
-        ew.classList.remove('active'); ob.classList.remove('active'); ob.innerHTML = 'Selecionar'; cb.classList.remove('visible');
-        ew.querySelectorAll('input').forEach(input => { input.checked = false; });
-      }
-      currentOrder = null;
-    }
+  if (!currentOrder) return;
+  const c = currentOrder.customer || {};
+  let message = `🍽️ *PEDIDO CONFIRMADO - COCINA VELARI*%0A%0A`;
+  message += `📋 *Prato:* ${currentOrder.itemName}%0A`;
+  message += `💰 *Valor Base:* R$ ${currentOrder.basePrice.toFixed(2)}%0A`;
+  if (currentOrder.extras.length > 0) {
+    message += `%0A*Extras:*%0A`;
+    currentOrder.extras.forEach(extra => { message += `➕ ${extra.name} — R$ ${extra.price.toFixed(2)}%0A`; });
+  }
+  message += `%0A💎 *TOTAL PAGO:* R$ ${currentOrder.total.toFixed(2)}%0A`;
+  message += `✅ *Status:* Pagamento Confirmado%0A%0A`;
+  message += `👤 *Cliente:* ${c.name || 'N/I'}%0A`;
+  message += `📱 *WhatsApp:* ${c.phone || 'N/I'}%0A`;
+  message += `📍 *Entrega:* ${c.street || ''}, ${c.number || ''} - ${c.district || ''} - ${c.city || ''}%0A%0A`;
+  message += `📞 Aguardando confirmação do estabelecimento.`;
+  
+  // 1. Primeiro fecha o modal e reseta o card
+  closePaymentModal();
+  if (currentOrder.card) {
+    const ew = currentOrder.card.querySelector('.extras-wrapper');
+    const ob = currentOrder.card.querySelector('.order-btn');
+    const cb = currentOrder.card.querySelector('.checkout-btn');
+    ew.classList.remove('active'); ob.classList.remove('active'); ob.innerHTML = 'Selecionar'; cb.classList.remove('visible');
+    ew.querySelectorAll('input').forEach(input => { input.checked = false; });
+  }
+  currentOrder = null;
+
+  // 2. Depois redireciona para o WhatsApp
+  const url = `https://wa.me/5583921505963?text=${message}`;
+  window.location.href = url;
+}
 
     function copyPixCode() {
       const pixCode = document.getElementById('pixCode').textContent;
