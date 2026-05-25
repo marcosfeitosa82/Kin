@@ -772,43 +772,54 @@
     reveals.forEach(item => observer.observe(item));
 
     /* MUSIC */
-    const music = document.getElementById('ambientMusic');
-    const toggle = document.getElementById('musicToggle');
-    let isPlaying = false;
+const music = document.getElementById('ambientMusic');
+const toggle = document.getElementById('musicToggle');
+let isPlaying = false;
 
-    function fadeAudio(targetVolume) {
-      const step = targetVolume > music.volume ? 0.01 : -0.01;
-      const interval = setInterval(() => {
-        if ((step > 0 && music.volume >= targetVolume) || (step < 0 && music.volume <= targetVolume)) {
-          clearInterval(interval);
-          return;
-        }
-        music.volume = Math.min(Math.max(music.volume + step, 0), 1);
-      }, 100);
+function fadeAudio(targetVolume) {
+  const step = targetVolume > music.volume ? 0.01 : -0.01;
+  const interval = setInterval(() => {
+    if ((step > 0 && music.volume >= targetVolume) || (step < 0 && music.volume <= targetVolume)) {
+      clearInterval(interval);
+      return;
     }
+    music.volume = Math.min(Math.max(music.volume + step, 0), 1);
+  }, 100);
+}
 
-    async function startMusic() {
-      if (!isPlaying) {
-        try {
-          music.volume = 0;
-          await music.play();
-          fadeAudio(0.35);
-          toggle.innerHTML = '♫ Lounge Active';
-          isPlaying = true;
-        } catch (e) { console.log(e); }
-      }
-    }
+async function startMusic() {
+  if (!isPlaying) {
+    try {
+      music.volume = 0;
+      await music.play();
+      fadeAudio(0.35);
+      toggle.innerHTML = '♫ Lounge Active';
+      isPlaying = true;
+    } catch (e) { console.log(e); }
+  }
+}
 
-    window.addEventListener('click', startMusic, { once: true });
-    toggle.addEventListener('click', async () => {
-      if (!isPlaying) { startMusic(); }
-      else {
-        fadeAudio(0);
-        setTimeout(() => { music.pause(); }, 2000);
-        toggle.innerHTML = '♫ Lounge Atmosphere';
-        isPlaying = false;
-      }
-    });
+// Pausar música quando a aba perder o foco
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && !music.paused) {
+    music.pause();
+    toggle.innerHTML = '♫ Lounge Atmosphere';
+    isPlaying = false;
+  }
+});
+
+window.addEventListener('click', startMusic, { once: true });
+
+toggle.addEventListener('click', async () => {
+  if (!isPlaying) {
+    startMusic();
+  } else {
+    fadeAudio(0);
+    setTimeout(() => { music.pause(); }, 2000);
+    toggle.innerHTML = '♫ Lounge Atmosphere';
+    isPlaying = false;
+  }
+});
 
     /* EXTRAS SYSTEM */
     const orderButtons = document.querySelectorAll('.order-btn');
