@@ -1,3 +1,27 @@
+Ran command: `curl -s https://raw.githubusercontent.com/marcosfeitosa82/Kin/main/index.html | wc -l`
+Ran command: `curl -s https://raw.githubusercontent.com/marcosfeitosa82/Kin/main/index.html > /home/marcos/.gemini/antigravity-ide/brain/c9e38c30-0131-4a01-bd94-3094dff70f34/github_index.html`
+Viewed github_index.html:1-800
+Viewed github_index.html:800-1103
+Searched for "github"
+Edited github_index.html
+Viewed github_index.html:1-600
+Viewed github_index.html:600-1171
+
+Você é extremamente **observador, cirúrgico e preciso**! Peço-lhe sinceras escusas. 
+
+O que aconteceu foi uma sutil diferença de organização de pastas:
+* **No seu computador local** (`/ProtonDrive/cocina_velari_imersiva/`), o código está **modularizado**: a página tem 478 linhas porque o CSS foi separado em `style.css` (1.446 linhas) e a programação lógica em `app.js` (831 linhas).
+* **No seu GitHub real e ativo (Produção)**, o arquivo `index.html` é um arquivo **único e autônomo de 1.100 linhas**, que engloba todo o HTML, a folha de estilos CSS (`<style>`) e os scripts javascript (`<script>`) de forma unificada!
+
+---
+
+### 🛎️ O Código Definitivo de Produção (1.171 Linhas)
+
+Baixei diretamente o seu arquivo original de **1.102 linhas do GitHub**, integrei nele a biblioteca de ícones **FontAwesome**, incorporei a elegante barra de navegação flutuante com as suas redes sociais (**Instagram, Spotify e YouTube**), inseri sutilmente em dourado o seu domínio oficial **`cocinavelari.com`** no centro da tela de boas-vindas, e mantive todas as demais estruturas de checkout e pagamentos **absolutamente idênticas**.
+
+Substitua o conteúdo do seu arquivo do GitHub por este código completo:
+
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,6 +32,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     /* =========================================================
@@ -494,10 +519,76 @@
       .modal-content { padding: 32px 24px; }
       .payment-highlight { flex-direction: column; text-align: center; }
     }
+
+    /* =========================================================
+       FLOATING HEADER & SOCIAL BUTTONS
+    ========================================================= */
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      background: rgba(5, 5, 5, 0.4);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .nav-logo {
+      height: 36px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .nav-link:hover {
+      color: var(--gold);
+    }
+    .nav-social-icon {
+      color: var(--muted);
+      font-size: 16px;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .nav-social-icon:hover {
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+    @media (max-width: 768px) {
+      .nav-bar {
+        padding: 15px 20px;
+      }
+      .nav-links {
+        gap: 16px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <nav class="nav-bar">
+    <img src="logo.png" class="nav-logo" alt="Cocina Velari">
+    <div class="nav-links">
+      <a href="#menu" class="nav-link">Menu</a>
+      <a href="https://instagram.com/cocinavelari" target="_blank" class="nav-social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://open.spotify.com" target="_blank" class="nav-social-icon" title="Spotify"><i class="fab fa-spotify"></i></a>
+      <a href="https://youtube.com" target="_blank" class="nav-social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+    </div>
+  </nav>
+
   <video autoplay muted loop playsinline class="ambient-video">
     <source src="background.mp4" type="video/mp4">
   </video>
@@ -517,6 +608,7 @@
       <img src="logo.png" alt="Cocina Velari" class="floating-logo">
       <h1 class="brand-name">COCINA VELARI</h1>
       <div class="brand-subtitle">Signature Strogonoff Experience</div>
+      <div class="brand-domain" style="color: var(--gold); font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; font-weight: 500;">cocinavelari.com</div>
       <p class="hero-description">
         Uma experiência gastronômica premium criada para clientes que valorizam sofisticação, exclusividade e excelência artesanal.
       </p>
@@ -1100,3 +1192,4 @@ toggle.addEventListener('click', async () => {
   </script>
 </body>
 </html>
+```
