@@ -6,9 +6,9 @@ export default function LoyaltyCard({
   loyaltyLoading,
   checkLoyaltyCard,
   activeStampsPhone,
-  loyaltyStamps,
   loyaltyMessage,
-  formatPhone
+  formatPhone,
+  setActiveModal
 }) {
   return (
     <div className="loyalty-container reveal visible">
@@ -16,14 +16,14 @@ export default function LoyaltyCard({
         style={{
           fontFamily: "'Cinzel', serif",
           color: "var(--gold)",
-          fontSize: "20px",
+          fontSize: "19px",
           letterSpacing: "2px",
           marginBottom: "12px"
         }}
       >
         💎 CARTÃO FIDELIDADE PREMIUM
       </h3>
-      <p style={{ color: "var(--muted)", fontSize: "14px", marginBottom: "20px", lineHeight: "1.6" }}>
+      <p style={{ color: "var(--muted)", fontSize: "13.5px", marginBottom: "20px", lineHeight: "1.6" }}>
         A cada 9 pedidos, o seu 10º prato principal é por nossa conta.
         <br />
         Digite seu telefone para consultar seus carimbos.
@@ -34,8 +34,8 @@ export default function LoyaltyCard({
           display: "flex",
           justifyContent: "center",
           gap: "10px",
-          maxWidth: "400px",
-          margin: "0 auto 20px"
+          maxWidth: "320px",
+          margin: "0 auto"
         }}
       >
         <input
@@ -68,35 +68,19 @@ export default function LoyaltyCard({
       </div>
 
       {activeStampsPhone && (
-        <div id="loyaltyStampsGrid" className="stamp-grid" style={{ display: "grid" }}>
-          {Array.from({ length: 10 }).map((_, idx) => {
-            const i = idx + 1;
-            const currentStamps = loyaltyStamps % 10;
-            if (i === 10) {
-              const activeClass = currentStamps === 9 || loyaltyStamps >= 9 ? "active" : "";
-              return (
-                <div key={i} className={`stamp-circle free-gift ${activeClass}`} title="10º Prato Grátis!">
-                  <i className="fas fa-gift"></i>
-                </div>
-              );
-            } else {
-              const activeClass = i <= currentStamps ? "active" : "";
-              const content = i <= currentStamps ? <i className="fas fa-crown"></i> : i;
-              return (
-                <div key={i} className={`stamp-circle ${activeClass}`}>
-                  {content}
-                </div>
-              );
-            }
-          })}
-        </div>
-      )}
-      {loyaltyMessage && (
         <p
-          id="loyaltyStatusMessage"
-          style={{ marginTop: "20px", fontSize: "14px", color: "var(--gold)", fontWeight: "600", lineHeight: "1.5" }}
+          onClick={() => setActiveModal("loyalty")}
+          style={{
+            marginTop: "15px",
+            fontSize: "12.5px",
+            color: "#4caf50",
+            fontWeight: "600",
+            cursor: "pointer",
+            textDecoration: "underline",
+            letterSpacing: "0.5px"
+          }}
         >
-          {loyaltyMessage}
+          ✅ Fidelidade Ativo! Clique para ver seus carimbos.
         </p>
       )}
     </div>

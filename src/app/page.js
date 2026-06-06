@@ -495,11 +495,13 @@ export default function Home() {
       } else {
         setLoyaltyMessage(`💎 Você tem ${currentStamps} carimbo(s) ativo(s). Faltam ${remaining} pedido(s) para ganhar o seu prato principal grátis!`);
       }
+      setActiveModal("loyalty");
     } catch (err) {
       console.error(err);
       setLoyaltyStamps(0);
       setActiveStampsPhone(rawPhone);
       setLoyaltyMessage(`✨ Bem-vindo ao nosso clube de fidelidade! Ainda não localizamos o seu número no sistema. Faça o seu primeiro pedido hoje para ativar seu cartão de fidelidade e começar a acumular carimbos!`);
+      setActiveModal("loyalty");
     } finally {
       setLoyaltyLoading(false);
     }
@@ -1104,6 +1106,7 @@ export default function Home() {
           loyaltyStamps={loyaltyStamps}
           loyaltyMessage={loyaltyMessage}
           formatPhone={formatPhone}
+          setActiveModal={setActiveModal}
         />
 
         {/* MENU GRID */}
@@ -1278,6 +1281,74 @@ export default function Home() {
             <p style={{ color: "var(--muted)", fontSize: "13px", lineHeight: "1.6", marginBottom: "25px", fontStyle: "italic" }}>
               Prepare seu paladar para o próximo final de semana! Em breve estaremos prontos para lhe proporcionar a melhor experiência da nossa cozinha.
             </p>
+            <div className="modal-actions" style={{ justifyContent: "center" }}>
+              <button className="modal-btn primary" onClick={() => setActiveModal(null)} style={{ padding: "14px 28px" }}>
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeModal === "loyalty" && (
+        <div className="modal active" id="loyaltyModal">
+          <div className="modal-content" style={{ maxWidth: "480px", textAlign: "center", position: "relative" }}>
+            <button
+              onClick={() => setActiveModal(null)}
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "20px",
+                background: "none",
+                border: "none",
+                color: "var(--muted)",
+                fontSize: "24px",
+                cursor: "pointer"
+              }}
+            >
+              &times;
+            </button>
+            <h2 style={{ fontFamily: "'Cinzel', serif", color: "var(--gold)", marginBottom: "15px", fontSize: "22px", letterSpacing: "2px" }}>
+              💎 CARTÃO FIDELIDADE
+            </h2>
+            <p style={{ color: "var(--muted)", fontSize: "14px", marginBottom: "20px" }}>
+              WhatsApp: {formatPhone(activeStampsPhone)}
+            </p>
+
+            <div className="stamp-grid" style={{ marginBottom: "24px" }}>
+              {Array.from({ length: 10 }, (_, index) => {
+                const i = index + 1;
+                const currentStamps = loyaltyStamps % 10;
+                
+                if (i === 10) {
+                  const isActive = (currentStamps === 9 || loyaltyStamps >= 9);
+                  return (
+                    <div
+                      key={i}
+                      className={`stamp-circle free-gift ${isActive ? "active" : ""}`}
+                      title="10º Prato Grátis!"
+                    >
+                      <i className="fas fa-gift"></i>
+                    </div>
+                  );
+                } else {
+                  const isActive = i <= currentStamps;
+                  return (
+                    <div
+                      key={i}
+                      className={`stamp-circle ${isActive ? "active" : ""}`}
+                    >
+                      {isActive ? <i className="fas fa-crown"></i> : i}
+                    </div>
+                  );
+                }
+              })}
+            </div>
+
+            <p style={{ color: "var(--text)", fontSize: "14.5px", lineHeight: "1.7", marginBottom: "25px" }}>
+              {loyaltyMessage}
+            </p>
+
             <div className="modal-actions" style={{ justifyContent: "center" }}>
               <button className="modal-btn primary" onClick={() => setActiveModal(null)} style={{ padding: "14px 28px" }}>
                 Entendido

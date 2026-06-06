@@ -739,9 +739,9 @@
       transform: translateY(-2px);
     }
     .loyalty-container {
-      max-width: 520px;
+      max-width: 380px;
       margin: 0 auto 50px;
-      padding: 30px;
+      padding: 24px 24px 28px;
       background: rgba(20, 20, 20, 0.75);
       border: 1px solid rgba(184, 154, 95, 0.25);
       border-radius: var(--radius);
@@ -879,7 +879,8 @@
       filter: drop-shadow(0 0 15px rgba(184, 154, 95, 0.4));
     }
     .floating-shipping-badge-container.expanded {
-      transform: scale(1.7) !important;
+      transform: scale(1.7) translateX(15px) !important;
+      transform-origin: left center !important;
       z-index: 10005 !important;
       filter: drop-shadow(0 0 25px rgba(184, 154, 95, 0.7)) !important;
     }
