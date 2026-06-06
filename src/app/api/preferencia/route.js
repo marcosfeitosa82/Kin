@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const MP_ACCESS_TOKEN = "APP_USR-8359030569449469-051913-d6ae6244441c5f5a67f4b60f0c83ae5a-190693982";
+const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 
 export async function POST(request) {
   try {
