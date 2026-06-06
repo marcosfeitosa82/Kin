@@ -1,2 +1,0 @@
-# Cocina-Velari 
-My Projects
