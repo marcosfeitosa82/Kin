@@ -84,6 +84,31 @@ const DISHES = [
 const FIREBASE_DB_URL = "https://cocina-velari-fidelidade-default-rtdb.firebaseio.com";
 const MP_PUBLIC_KEY = "APP_USR-0446830c-21af-431e-959a-74906819f2c3";
 
+// Helper functions for operating hours and pre-inauguration
+function getBrasiliaDate() {
+  const d = new Date();
+  const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+  return new Date(utc + (3600000 * -3)); // UTC-3 (Brasília)
+}
+
+function isPreInauguration(now) {
+  const inaugurationDate = new Date("2026-06-26T00:00:00-03:00");
+  return now < inaugurationDate;
+}
+
+function isCozinhaOpen(now) {
+  const day = now.getDay(); // 0 = Domingo, 5 = Sexta, 6 = Sábado
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+
+  const isWorkingDay = (day === 5 || day === 6 || day === 0);
+  const timeInMinutes = hours * 60 + minutes;
+  const startInMinutes = 10 * 60; // 10:00
+  const endInMinutes = 13 * 60;   // 13:00
+
+  return isWorkingDay && (timeInMinutes >= startInMinutes && timeInMinutes < endInMinutes);
+}
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
@@ -533,8 +558,35 @@ export default function Home() {
     );
   };
 
+  const handleAdvanceToDelivery = () => {
+    const now = getBrasiliaDate();
+    if (isPreInauguration(now)) {
+      setActiveModal("pre_inauguracao");
+      return;
+    }
+    if (!isCozinhaOpen(now)) {
+      setActiveModal("cozinha_fechada");
+      return;
+    }
+    if (cart.length === 0) {
+      alert("Sua sacola está vazia!");
+      return;
+    }
+    setActiveModal("customer");
+  };
+
   // Salvar formulário do cliente e avançar para o pagamento
   const handleCustomerSubmit = () => {
+    const now = getBrasiliaDate();
+    if (isPreInauguration(now)) {
+      setActiveModal("pre_inauguracao");
+      return;
+    }
+    if (!isCozinhaOpen(now)) {
+      setActiveModal("cozinha_fechada");
+      return;
+    }
+
     const rawPhone = phone.replace(/\D/g, "");
     if (!name || rawPhone.length < 10 || !street || !number || !district) {
       alert("Por favor, preencha todos os campos obrigatórios corretamente com um WhatsApp válido (com DDD).");
@@ -1001,6 +1053,27 @@ export default function Home() {
       <header>
         <div className="hero">
           <img src="logo.png" alt="Cocina Velari" className="floating-logo" />
+          {isPreInauguration(getBrasiliaDate()) && (
+            <div
+              className="inauguration-banner"
+              style={{
+                display: "inline-block",
+                background: "rgba(184, 154, 95, 0.15)",
+                border: "1px solid var(--gold)",
+                color: "var(--gold)",
+                padding: "8px 20px",
+                borderRadius: "999px",
+                fontSize: "12px",
+                fontWeight: "600",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+                marginBottom: "20px",
+                textAlign: "center"
+              }}
+            >
+              ✨ Grande Inauguração em 26 de Junho ✨
+            </div>
+          )}
           <h1 className="brand-name">COCINA VELARI</h1>
           <div className="brand-subtitle">Signature Strogonoff Experience</div>
           <div className="brand-domain">cocinavelari.com</div>
@@ -1116,6 +1189,7 @@ export default function Home() {
         loyaltyDiscount={loyaltyDiscount}
         totalGeral={totalGeral}
         setActiveModal={setActiveModal}
+        onAdvance={handleAdvanceToDelivery}
       />
 
       <CustomerModal
@@ -1161,6 +1235,57 @@ export default function Home() {
         sendWooviOrderToWhatsApp={sendWooviOrderToWhatsApp}
         setActiveModal={setActiveModal}
       />
+
+      {activeModal === "pre_inauguracao" && (
+        <div className="modal active" id="preInauguracaoModal">
+          <div className="modal-content" style={{ maxWidth: "480px", textAlign: "center" }}>
+            <h2 style={{ fontFamily: "'Cinzel', serif", color: "var(--gold)", marginBottom: "15px", fontSize: "22px", letterSpacing: "2px" }}>
+              ✨ GRANDE INAUGURAÇÃO
+            </h2>
+            <div style={{ fontSize: "50px", color: "var(--gold)", marginBottom: "20px", filter: "drop-shadow(0 0 10px rgba(184,154,95,0.3))" }}>
+              <i className="far fa-calendar-alt"></i>
+            </div>
+            <p style={{ color: "var(--text)", fontSize: "15px", lineHeight: "1.7", marginBottom: "20px" }}>
+              Seja muito bem-vindo à Cocina Velari!<br /><br />
+              Estamos preparando cada detalhe para lhe proporcionar uma experiência gastronômica inesquecível.
+              Nossa inauguração oficial será no dia <strong>26 de Junho de 2026</strong>.
+            </p>
+            <p style={{ color: "var(--muted)", fontSize: "13px", lineHeight: "1.6", marginBottom: "25px", fontStyle: "italic" }}>
+              Fique à vontade para explorar o nosso menu, customizar os pratos e montar a sua sacola de desejos!
+            </p>
+            <div className="modal-actions" style={{ justifyContent: "center" }}>
+              <button className="modal-btn primary" onClick={() => setActiveModal(null)} style={{ padding: "14px 28px" }}>
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeModal === "cozinha_fechada" && (
+        <div className="modal active" id="cozinhaFechadaModal">
+          <div className="modal-content" style={{ maxWidth: "480px", textAlign: "center" }}>
+            <h2 style={{ fontFamily: "'Cinzel', serif", color: "var(--gold)", marginBottom: "15px", fontSize: "22px", letterSpacing: "2px" }}>
+              🛎️ Horário de Funcionamento
+            </h2>
+            <div style={{ fontSize: "50px", color: "var(--gold)", marginBottom: "20px", filter: "drop-shadow(0 0 10px rgba(184,154,95,0.3))" }}>
+              <i className="far fa-clock"></i>
+            </div>
+            <p style={{ color: "var(--text)", fontSize: "15px", lineHeight: "1.7", marginBottom: "20px" }}>
+              Nossa cozinha está temporariamente fechada neste momento.<br /><br />
+              Nossos horários de atendimento gourmet são de <strong>Sexta a Domingo</strong>, das <strong>10:00 às 13:00</strong>.
+            </p>
+            <p style={{ color: "var(--muted)", fontSize: "13px", lineHeight: "1.6", marginBottom: "25px", fontStyle: "italic" }}>
+              Prepare seu paladar para o próximo final de semana! Em breve estaremos prontos para lhe proporcionar a melhor experiência da nossa cozinha.
+            </p>
+            <div className="modal-actions" style={{ justifyContent: "center" }}>
+              <button className="modal-btn primary" onClick={() => setActiveModal(null)} style={{ padding: "14px 28px" }}>
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

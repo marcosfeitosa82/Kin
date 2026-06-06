@@ -11,7 +11,8 @@ export default function CartModal({
   getCartItemsCount,
   loyaltyDiscount,
   totalGeral,
-  setActiveModal
+  setActiveModal,
+  onAdvance
 }) {
   if (!isOpen) return null;
 
@@ -142,7 +143,7 @@ export default function CartModal({
           <button className="modal-btn" onClick={() => setActiveModal(null)}>
             Continuar Comprando
           </button>
-          <button className="modal-btn primary" onClick={() => setActiveModal("customer")}>
+          <button className="modal-btn primary" onClick={onAdvance}>
             Avançar para Entrega 🛎️
           </button>
         </div>
