@@ -92,8 +92,8 @@ function getBrasiliaDate() {
 }
 
 function isPreInauguration(now) {
-  const inaugurationDate = new Date("2026-06-26T00:00:00-03:00");
-  return now < inaugurationDate;
+  // Bloqueio permanente de segurança ativado sob solicitação do cliente
+  return true;
 }
 
 function isCozinhaOpen(now) {
@@ -1073,7 +1073,7 @@ export default function Home() {
                 textAlign: "center"
               }}
             >
-              ✨ Grande Inauguração em 26 de Junho ✨
+              ✨ Só mais um pouquinho e estaremos prontos para te atender ✨
             </div>
           )}
           <h1 className="brand-name">COCINA VELARI</h1>
@@ -1243,15 +1243,15 @@ export default function Home() {
         <div className="modal active" id="preInauguracaoModal">
           <div className="modal-content" style={{ maxWidth: "480px", textAlign: "center" }}>
             <h2 style={{ fontFamily: "'Cinzel', serif", color: "var(--gold)", marginBottom: "15px", fontSize: "22px", letterSpacing: "2px" }}>
-              ✨ GRANDE INAUGURAÇÃO
+              ✨ EM BREVE...
             </h2>
             <div style={{ fontSize: "50px", color: "var(--gold)", marginBottom: "20px", filter: "drop-shadow(0 0 10px rgba(184,154,95,0.3))" }}>
-              <i className="far fa-calendar-alt"></i>
+              <i className="fas fa-hourglass-half"></i>
             </div>
             <p style={{ color: "var(--text)", fontSize: "15px", lineHeight: "1.7", marginBottom: "20px" }}>
               Seja muito bem-vindo à Cocina Velari!<br /><br />
               Estamos preparando cada detalhe para lhe proporcionar uma experiência gastronômica inesquecível.
-              Nossa inauguração oficial será no dia <strong>26 de Junho de 2026</strong>.
+              <strong> Só mais um pouquinho e estaremos prontos para te atender.</strong>
             </p>
             <p style={{ color: "var(--muted)", fontSize: "13px", lineHeight: "1.6", marginBottom: "25px", fontStyle: "italic" }}>
               Fique à vontade para explorar o nosso menu, customizar os pratos e montar a sua sacola de desejos!
