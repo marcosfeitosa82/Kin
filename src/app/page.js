@@ -13,11 +13,11 @@ const DISHES = [
     name: "Velvet Bourguignon",
     price: 44.90,
     emoji: "🥩",
-    image: "prato4.png",
+    image: "velvet_bourguignon_new.jpg",
     description: "Corte bovino selecionado lentamente envolvido em creme especial Velari, redução aromática sofisticada e acabamento gastronômico inspirado na alta cozinha europeia. Acompanhamentos: Arroz, Seleta de Legumes e Batata Premium.",
     sommelier: "Sugestão: Pinot Noir (Bourgogne) ou Cabernet Sauvignon. Tintos de corpo médio a encorpados com taninos presentes, perfeitos para cortar a suntuosidade do filé mignon selado e o molho demi-glace. Compre nas adegas locais: Enoteca Decanter (Cabo Branco) ou Grand Cru (Altiplano).",
     extras: [
-      { name: "Alho Poró Salteado", price: 12 },
+      { name: "Bacon Artesanal", price: 12 },
       { name: "Crocante de Panko Trufado", price: 14 },
       { name: "Cogumelos Selvagens", price: 18 }
     ]
@@ -27,7 +27,7 @@ const DISHES = [
     name: "Riviera Gold",
     price: 42.90,
     emoji: "🦐",
-    image: "prato5.png",
+    image: "riviera_gold_new.jpg",
     description: "Camarões selecionados envolvidos em molho cremoso sofisticado, notas amanteigadas delicadas e acabamento premium desenvolvido para uma experiência exclusiva. Acompanhamentos: Arroz, Seleta de Legumes e Batata Premium.",
     sommelier: "Sugestão: Chardonnay Barricado ou Espumante Brut. A estrutura cremosa e as notas amanteigadas do Chardonnay harmonizam em perfeita simetria com a riqueza da bisque e dos camarões grelhados. Compre nas adegas locais: Copa Adega (Tambaú) ou Enoteca Decanter (Cabo Branco).",
     extras: [

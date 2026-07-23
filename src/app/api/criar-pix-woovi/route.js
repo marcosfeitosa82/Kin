@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const SECURE_DISHES = {
-  "Velvet Bourguignon": { price: 44.90, extras: { "Alho Poró Salteado": 12, "Crocante de Panko Trufado": 14, "Cogumelos Selvagens": 18 } },
+  "Velvet Bourguignon": { price: 44.90, extras: { "Bacon Artesanal": 12, "Crocante de Panko Trufado": 14, "Cogumelos Selvagens": 18 } },
   "Riviera Gold": { price: 42.90, extras: { "Toque de Limão Siciliano": 8, "Farofa de Castanhas Crocantes": 12, "Emulsão de Ervas Finas": 8 } },
   "Velari Classic": { price: 32.90, extras: { "Upgrade: Corte Bovino Especial": 8.99, "Batata Extra": 8, "Bacon Artesanal": 12, "Molho Especial": 6 } },
   "Imperial Velari": { price: 34.90, extras: { "Upgrade: Corte Bovino Especial": 8.99, "Parmesão Premium": 10, "Batata Trufada": 14 } },
