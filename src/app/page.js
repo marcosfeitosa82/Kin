@@ -617,6 +617,9 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          cart: cart,
+          deliveryFee: deliveryFee,
+          loyaltyPhone: activeStampsPhone,
           total: amount,
           descricao: "Pedido Cocina Velari",
           correlationID: orderID
@@ -722,7 +725,9 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: mpItems,
+          cart: cart,
+          deliveryFee: deliveryFee,
+          loyaltyPhone: activeStampsPhone,
           payer: {
             name: name,
             email: "cliente@cocinavelari.com"
