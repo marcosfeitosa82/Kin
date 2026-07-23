@@ -11,7 +11,7 @@ const DISHES = [
   {
     id: "velvet-bourguignon",
     name: "Velvet Bourguignon",
-    price: 54.90,
+    price: 44.90,
     emoji: "🥩",
     image: "prato4.png",
     description: "Corte bovino selecionado lentamente envolvido em creme especial Velari, redução aromática sofisticada e acabamento gastronômico inspirado na alta cozinha europeia.",
@@ -25,7 +25,7 @@ const DISHES = [
   {
     id: "riviera-gold",
     name: "Riviera Gold",
-    price: 52.90,
+    price: 42.90,
     emoji: "🦐",
     image: "prato5.png",
     description: "Camarões selecionados envolvidos em molho cremoso sofisticado, notas amanteigadas delicadas e acabamento premium desenvolvido para uma experiência exclusiva.",
