@@ -14,7 +14,7 @@ const DISHES = [
     price: 44.90,
     emoji: "🥩",
     image: "prato4.png",
-    description: "Corte bovino selecionado lentamente envolvido em creme especial Velari, redução aromática sofisticada e acabamento gastronômico inspirado na alta cozinha europeia.",
+    description: "Corte bovino selecionado lentamente envolvido em creme especial Velari, redução aromática sofisticada e acabamento gastronômico inspirado na alta cozinha europeia. Acompanhamentos: Arroz, Seleta de Legumes e Batata Premium.",
     sommelier: "Sugestão: Pinot Noir (Bourgogne) ou Cabernet Sauvignon. Tintos de corpo médio a encorpados com taninos presentes, perfeitos para cortar a suntuosidade do filé mignon selado e o molho demi-glace. Compre nas adegas locais: Enoteca Decanter (Cabo Branco) ou Grand Cru (Altiplano).",
     extras: [
       { name: "Alho Poró Salteado", price: 12 },
@@ -28,12 +28,12 @@ const DISHES = [
     price: 42.90,
     emoji: "🦐",
     image: "prato5.png",
-    description: "Camarões selecionados envolvidos em molho cremoso sofisticado, notas amanteigadas delicadas e acabamento premium desenvolvido para uma experiência exclusiva.",
+    description: "Camarões selecionados envolvidos em molho cremoso sofisticado, notas amanteigadas delicadas e acabamento premium desenvolvido para uma experiência exclusiva. Acompanhamentos: Arroz, Seleta de Legumes e Batata Premium.",
     sommelier: "Sugestão: Chardonnay Barricado ou Espumante Brut. A estrutura cremosa e as notas amanteigadas do Chardonnay harmonizam em perfeita simetria com a riqueza da bisque e dos camarões grelhados. Compre nas adegas locais: Copa Adega (Tambaú) ou Enoteca Decanter (Cabo Branco).",
     extras: [
       { name: "Toque de Limão Siciliano", price: 8 },
-      { name: "Farofa de Amêndoas Crocantes", price: 14 },
-      { name: "Emulsão de Ervas Finas", price: 12 }
+      { name: "Farofa de Castanhas Crocantes", price: 12 },
+      { name: "Emulsão de Ervas Finas", price: 8 }
     ]
   },
   {
@@ -42,7 +42,7 @@ const DISHES = [
     price: 32.90,
     emoji: "🍽️",
     image: "prato1.png",
-    description: "Filé de sassami grelhado no ponto exato — proteína nobre, macia e suculenta. Envolto no creme aveludado da casa, arroz soltinho e batata rústica dourada e crocante. Conforto e elegância no mesmo prato.",
+    description: "Filé de sassami grelhado no ponto exato — proteína nobre, macia e suculenta. Envolto no creme aveludado da casa. Conforto e elegância no mesmo prato. Acompanhamentos: Arroz, Seleta de Legumes e Batata Premium.",
     sommelier: "Sugestão: Chardonnay jovem ou Pinot Noir leve. Uma harmonização sutil que acompanha a delicadeza e a cremosidade do creme de strogonoff sem sobressair sobre a carne branca. Compre nas adegas locais: Pão de Açúcar (Manaíra/Epitácio) ou Verdfrut (Altiplano).",
     extras: [
       { name: "Upgrade: Corte Bovino Especial", price: 8.99 },
@@ -57,7 +57,7 @@ const DISHES = [
     price: 34.90,
     emoji: "👑",
     image: "prato2.png",
-    description: "Filé de sassami de origem controlada ao limão siciliano e alcaparras — vibrante, refrescante e viciante. Finalizado com parmesão gratinado e batata trufada que eleva cada garfada a outro nível.",
+    description: "Filé de sassami de origem controlada ao limão siciliano e alcaparras — vibrante, refrescante e viciante. Finalizado com parmesão gratinado. Acompanhamentos: Arroz, Seleta de Legumes e Batata Premium.",
     sommelier: "Sugestão: Sauvignon Blanc ou Espumante Brut. O perfil herbáceo e a alta acidez do Sauvignon Blanc limpam perfeitamente o paladar do toque salgado e ácido das alcaparras e do limão siciliano. Compre nas adegas locais: Copa Adega (Tambaú) ou Grand Cru (Manaíra).",
     extras: [
       { name: "Upgrade: Corte Bovino Especial", price: 8.99 },
@@ -71,7 +71,7 @@ const DISHES = [
     price: 37.90,
     emoji: "✨",
     image: "prato3.png",
-    description: "Filé de sassami macio e suculento sobre champignons salteados em manteiga dourada, cobertos por uma redução sedosa de molho madeira. Intenso, terroso e absolutamente marcante.",
+    description: "Filé de sassami macio e suculento sobre champignons salteados em manteiga dourada, cobertos por uma redução sedosa de molho madeira. Intenso, terroso e absolutamente marcante. Acompanhamentos: Arroz, Seleta de Legumes e Batata Premium.",
     sommelier: "Sugestão: Merlot ou Carménère. Tintos de corpo médio e macios que abraçam as notas terrosas dos cogumelos champignons e a redução adocicada do molho madeira. Compre nas adegas locais: Pão de Açúcar (Manaíra) ou Enoteca Decanter (Cabo Branco).",
     extras: [
       { name: "Upgrade: Corte Bovino Especial", price: 8.99 },
